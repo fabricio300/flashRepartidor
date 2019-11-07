@@ -1,0 +1,182 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-buttons>
+        <ion-back-button>
+
+        </ion-back-button>
+
+        <ion-title>Datos de la solicitud</ion-title>
+    </ion-buttons>
+    
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <div class="contenedor-primordial"> 
+  
+    <div class="contmapa"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="centrar" style="width: 100%; height: 7%; background: #252525; color:gold;">
+  
+ 
+    <h6 >Información de servicio</h6>
+
+ 
+  
+</div>
+
+    <div class="contmapa centrar" style="height: 53%;" >
+
+
+
+
+      <div class="mitad ladoEmpresa" style="overflow-y: scroll; width: 100%;">
+
+          <label class="centrarIz">
+              <img src="../../../assets/iconos/pin (2).png" class="icon">
+              Destino:
+            </label>
+            <p>Parque de la Marimba, Avenida Central Poniente, Centro, Tuxtla Gutiérrez, Chis.</p>
+
+            <label class="centrarIz">
+                <img src="../../../assets/iconos/research.png" class="icon">
+                Referecias:
+            </label>
+
+            <p>.....</p>
+
+            <label class="centrarIz">
+              <img src="../../../assets/iconos/list (1).png" class="icon">
+              Tarea:
+            </label>
+            <p>Recojer ropa</p>
+           
+    
+            <label class="centrarIz">
+              <img src="../../../assets/iconos/user (1).png" class="icon">
+              Receptor:
+            </label>
+            <p>nombre del cliente</p>
+
+
+        <label class="centrarIz">
+          <img src="../../../assets/iconos/shop.png" class="icon">
+          Empresa:</label>
+
+        <p>nombre de lavanderia</p>
+
+        <label class="centrarIz">
+          <img src="../../../assets/iconos/call-answer (2).png" class="icon">
+          Contacto de lavanderia:
+        </label>
+
+        <p>000-000-0000</p>
+
+   
+        <div class="butonCont centrar">
+
+          <button (click)="this.efectos.mostrarDatos()">
+              Reagistrar pesaje
+          </button>
+
+          <button  *ngIf="this.efectos==1">
+              Validar entrega
+          </button>
+
+
+        </div>
+
+    </div>
+
+
+
+     
+
+
+
+
+    </div>
+
+
+
+
+  </div>
+
+  <div id="DATOS" class="contenedor-primordial quitar" style="overflow-y:scroll; padding: 9px;"> 
+   
+    <h5 id="DATOS1" style=" color: #EFE400;">Ofertas de la empresa:</h5>
+    <p>Viernes 2x1 el lavado de ropa</p>
+    <p>Jueves planchado a mitad de precio por kilo</p>
+    <p>Miercoles 20% de descuento en lavado de almodas</p>
+    <br>
+    <h5 style=" color: #394a6d;">Servicios solicitados:</h5>
+
+
+
+  <div class="servicios" *ngFor="let servicio of servicios">
+      <p>{{servicio.servicio}} ${{servicio.precio}} por {{servicio.unidad}}</p>
+   
+      <br>
+      
+      <div class="butonCont centrar">
+        <label style="color: #C1C1C1;">
+            Kilos / piezas: <br>
+            <input type="number" [(ngModel)]="servicio.cantidad" >
+        </label>
+       <label style="padding: 5px; color: #C1C1C1;"><br>=</label>
+        <label  style="color: #C1C1C1;">
+              Precio por servicio: <br>
+            <input type="number" onchange="optenrTotal()" id="{{servicio.servicio}}" value="{{servicio.cantidad*servicio.precio}}">
+        </label>
+         
+
+      </div>
+
+      
+  </div>
+
+
+
+
+
+  <br>
+  <h5 style="color: #3c9d9b;">Coste de transporte:</h5>
+  <p>${{conste_de_transporte}}</p>
+    
+  <label >
+    <button class="boto"
+    (click)="optenrTotal()"
+    >Optener total</button> = ${{total}}
+
+  </label>
+  <br>
+
+  <div class="butonCont centrar" style="margin-top:20px;">
+      <ion-button 
+      (click)="this.efectos.ocultarDatos()"
+      color=danger style="width: 40%;">
+        Cancelar
+      </ion-button>
+
+      <ion-button 
+       (click)="this.efectos.ocultarDatos()"
+        color=danger style="width: 40%;">
+          Aceptar
+        </ion-button>
+  </div>
+  </div>
+
+</ion-content>

@@ -1,0 +1,38 @@
+.parte{
+    width: 100%;
+    height: 100%;
+    //background: blue;;
+}
+
+
+form{
+    width: 90%;
+    //background: yellowgreen;
+    height: auto;
+    padding: 10px;
+    margin: auto;
+    padding-top: 20px;
+}
+
+
+form::content ion-button{
+    width: 40%;
+    margin: auto;
+}
+
+.imagen{
+    max-height: 80%;
+    width: auto;
+    margin: auto;
+}
+
+.centrar{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.centrar::content ion-button{
+    width: 40%;
+}

@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="parte centrar" *ngIf="tipoDeLogin==0">
+
+    <img src="../../../assets/iconos/flaswash2.png" class="imagen">
+
+<div class="centrar" style="width: 100%;">
+  <ion-button (click)="ver(1)">
+    Iniciar sesion
+  </ion-button>
+  <ion-button  (click)="ver(2)">
+    Registrarse
+  </ion-button>
+</div>    
+   
+
+  </div>
+
+
+  <div class="parte" *ngIf="tipoDeLogin==1">
+    <form >
+      <label >Nombre:</label>
+      <ion-input placeholder="Nombre"></ion-input>
+      <label >Contraseña:</label>
+      <ion-input placeholder="Contraseña"></ion-input>
+
+      <ion-button [routerLink]="['/inicio']">
+        Aceptar
+      </ion-button>
+      <ion-button  style="float: right;" (click)="cancelar()">
+        Cancelar
+      </ion-button>
+    </form>
+    
+  </div>
+
+
+
+
+
+  <div class="parte" *ngIf="tipoDeLogin==2">
+    <form >
+      <label >Nombre:</label>
+      <ion-input placeholder="Nombre"></ion-input>
+
+      <label >Contraseña:</label>
+      <ion-input placeholder="Contraseña"></ion-input>
+
+      <label >Confirma tu contraseña:</label>
+      <ion-input placeholder="Contraseña"></ion-input>
+
+      <label >Matricula de veiculo:</label>
+      <ion-input placeholder="Matricula"></ion-input>
+
+      <label >Numero telefonico:</label>
+      <ion-input placeholder="000-000-0000"></ion-input>
+
+      <label >Correo electronico:</label>
+      <ion-input placeholder="correo"></ion-input>
+
+      <ion-button>
+        Aceptar
+      </ion-button>
+      <ion-button  style="float: right;" (click)="cancelar()">
+        Cancelar
+      </ion-button>
+    </form>
+    
+  </div>
+
+
+
+</ion-content>

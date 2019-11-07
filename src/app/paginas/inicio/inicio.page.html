@@ -1,0 +1,192 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-buttons >
+      <ion-button (click)="openFirst()">
+          <ion-icon name="menu"></ion-icon>
+      </ion-button>
+
+
+
+      <ion-title>inicio</ion-title>
+    </ion-buttons>
+   
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+
+
+
+
+
+
+    <ion-menu side="start" menuId="first" style="position: fixed; z-index: 100;">
+        <ion-header>
+          <ion-toolbar color="secondary">
+            <img src="../../../assets/iconos/flaswash2.png" width="100%">
+            
+          </ion-toolbar>
+        </ion-header>
+        <ion-content color=secondary>
+       
+            <ion-item color=secondary *ngFor="let op of menuZ" routerLink="{{op.url}}">
+              <img src="{{op.icon}}" width="20px" style="margin: 3px;">
+              {{op.titulo}}
+            </ion-item>
+         
+     
+        </ion-content>
+      </ion-menu>
+
+
+
+  <ion-router-outlet main></ion-router-outlet>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h4 style="margin-left: 10px; height: 5%;" >Solicitudes:</h4>
+ 
+ 
+
+  <div class="medio centrar" >
+
+
+
+
+
+    <div  class="contet1 centrar" *ngFor="let solicitud of solicitudes" >
+
+
+      <div class="mitad centrar" >
+          
+        <label style="width: 100%;">
+          <p class="centrar" style="font-size: 11px;">
+            <img src="../../../assets/iconos/pin (1).png" width="20px" style="margin:4px;">
+            Destino:
+          </p> 
+         <p class="centrar" style="text-align: center;">
+              {{solicitud.direccion}}
+        </p> 
+         
+         
+           
+        
+        </label>
+ 
+
+      </div>
+
+      <div class="mitad centrar" >
+          <label >
+              <p class="centrar" style="font-size: 11px;">
+                <img src="../../../assets/iconos/list.png" width="20px" style="margin:4px;">
+                Tarea:
+              </p>
+              <p  class="centrar"  style="text-align: center;">
+                {{solicitud.tarea}}
+              </p>
+          </label>
+      </div>
+
+
+      <button class="bton" routerLink='/datos-solicitud'></button>
+
+    </div>
+
+
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="inferior centrar">
+
+    <div class="mitad centrar" style="justify-content: left; padding: 5px; width: 40%;">
+        <h6>Me encuentro: </h6>
+    </div>
+
+
+
+    <div class="mitad centrar" style="width: 60%;">
+       <div class="mitad centrar">
+
+              <p class="centrar" style="font-size: 10px;" >
+                <img src="{{servicio}}" style="width: 25px; margin: 10px; cursor: pointer;" >
+                <br>
+               <a
+               [ngClass]="{'colorx':stadoDelRepartidor==1, 'blanco':stadoDelRepartidor!=1}"
+               style="width: 100%; text-align: center; "> En servicio</a> 
+              </p>
+              <button class="bton" (click)="estado(1)"></button>
+       </div> 
+
+
+       <div class="mitad centrar">
+        
+            <p class="centrar" style="font-size: 10px;" >
+              <img src="{{descansando}}" style="width: 25px; margin: 10px;">
+              <br>
+               <a 
+               [ngClass]="{'colorx':stadoDelRepartidor==2, 'blanco':stadoDelRepartidor!=2}"
+               style="width: 100%; text-align: center; "> Descansando</a> 
+            </p>
+            <button class="bton" (click)="estado(2)"></button>
+       </div> 
+
+    </div>
+
+
+
+  </div>
+
+
+
+
+
+
+</ion-content>

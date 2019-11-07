@@ -1,0 +1,113 @@
+.contenedor-primordial{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: white;
+}
+
+
+.contmapa{
+    height: 40%;
+    widows: 100%;
+    background: white;
+}
+
+.mitad{
+    width: 50%;
+    height: 100%;
+   // border: 1px solid black;
+}
+
+
+.centrar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
+.centrarIz{
+    display: flex;
+    justify-content:left;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
+.ladoServicio{
+    background: #252525;
+    padding: 5px;
+}
+
+.ladoEmpresa{
+    background: #252525;
+    padding: 5px;
+}
+
+.ladoEmpresa::content p,.ladoServicio::content p{
+    color: white;
+    font-size: 13px;
+    margin-left: 20px;
+}
+
+.ladoEmpresa::content h6,.ladoServicio::content h6{
+    color: white;
+    font-size: 15px;
+}
+
+
+.ladoEmpresa::content label,.ladoServicio::content label{
+    color: #E7DC00;
+    font-size: 13px;
+}
+
+.icon{
+    width: 20px;
+    margin: 3px;
+}
+
+.butonCont{
+    width: 100%;
+    padding: 10px;
+   // background: red;
+}
+
+.butonCont::content button ,.boto{
+    outline: none;
+    padding: 8px;
+    background: #ff0000;
+    color: white;
+}
+
+.servicios{
+    width: 95%;
+    height: auto;
+    //background: yellow;
+    padding: 10px;
+    border-bottom: 1px solid #C1C1C1;
+    margin: auto;
+    margin-bottom: 20px;;
+    -webkit-box-shadow: 10px 10px 12px -6px rgba(0,0,0,0.75);
+-moz-box-shadow: 10px 10px 12px -6px rgba(0,0,0,0.75);
+box-shadow: 10px 10px 12px -6px rgba(0,0,0,0.75);
+}
+
+.servicios::content input{
+    width: 120px;
+    font-size: 15px !important;
+    outline: none;
+    border: none;
+    color: gray;
+    background: transparent;
+    border-bottom: 1px solid gray;
+    text-align: center;
+}
+.butonCont::content label{
+    font-size: 12px;
+}
+
+.quitar{
+    overflow: hidden;
+    margin-left: -100%;
+}
