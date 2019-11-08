@@ -5,7 +5,7 @@
 
         </ion-back-button>
 
-        <ion-title>Datos de la solicitud</ion-title>
+        <ion-title>Pedido</ion-title>
     </ion-buttons>
     
   </ion-toolbar>
@@ -13,13 +13,14 @@
 
 
 <ion-content>
-
+  <ion-button (click)="loadMap()" shape="round" fill="outline"> Aqui  </ion-button>
   <div class="contenedor-primordial"> 
   
-    <div class="contmapa"></div>
+    <div id="map" #map class="contmapa"> <ion-spinner></ion-spinner> </div>
 
-
-
+    <div id="address">
+      <span>{{address}}</span>
+    </div>
 
 
 
@@ -32,7 +33,7 @@
 <div class="centrar" style="width: 100%; height: 7%; background: #252525; color:gold;">
   
  
-    <h6 >Información de servicio</h6>
+    <h6 >Información del pedido</h6>
 
  
   

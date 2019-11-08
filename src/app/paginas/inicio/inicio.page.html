@@ -7,7 +7,7 @@
 
 
 
-      <ion-title>inicio</ion-title>
+      <ion-title>Solicitudes</ion-title>
     </ion-buttons>
    
   </ion-toolbar>
@@ -69,8 +69,12 @@
 
 
 
+<!--<div style="background-color: #252525;">
+  &nbsp;
+  <h4 style="margin-left: 10px;background-color: #252525;color: white;" >Solicitudes:</h4>
+  &nbsp;
+</div>-->
 
-  <h4 style="margin-left: 10px; height: 5%;" >Solicitudes:</h4>
  
  
 
@@ -80,7 +84,7 @@
 
 
 
-    <div  class="contet1 centrar" *ngFor="let solicitud of solicitudes" >
+    <div  class="contet1 centrar" *ngFor="let pedido of pedidos" >
 
 
       <div class="mitad centrar" >
@@ -91,7 +95,7 @@
             Destino:
           </p> 
          <p class="centrar" style="text-align: center;">
-              {{solicitud.direccion}}
+              {{pedido.direccion}}
         </p> 
          
          
@@ -109,7 +113,7 @@
                 Tarea:
               </p>
               <p  class="centrar"  style="text-align: center;">
-                {{solicitud.tarea}}
+                {{pedido.datos_ropa}}
               </p>
           </label>
       </div>
