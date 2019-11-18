@@ -1,10 +1,9 @@
 <ion-header>
   <ion-toolbar color=primary>
     <ion-buttons>
-        <ion-back-button>
-
-        </ion-back-button>
-
+        <ion-button (click)="back()">
+          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
         <ion-title>Pedido</ion-title>
     </ion-buttons>
     
@@ -13,14 +12,14 @@
 
 
 <ion-content>
-  <ion-button (click)="loadMap()" shape="round" fill="outline"> Aqui  </ion-button>
+  <!--<ion-button (click)="loadMap()" shape="round" fill="outline"> Aqui  </ion-button>-->
   <div class="contenedor-primordial"> 
   
-    <div id="map" #map class="contmapa"> <ion-spinner></ion-spinner> </div>
+    <!--<div id="map" #map class="contmapa"> <ion-spinner></ion-spinner> </div>
 
     <div id="address">
       <span>{{address}}</span>
-    </div>
+    </div>-->
 
 
 
@@ -39,7 +38,7 @@
   
 </div>
 
-    <div class="contmapa centrar" style="height: 53%;" >
+    <div class="contmapa centrar" style="height: 93%;" >
 
 
 
@@ -50,52 +49,66 @@
               <img src="../../../assets/iconos/pin (2).png" class="icon">
               Destino:
             </label>
-            <p>Parque de la Marimba, Avenida Central Poniente, Centro, Tuxtla Gutiérrez, Chis.</p>
+            <p>{{pedido.direccion_usuario}}</p>
 
             <label class="centrarIz">
                 <img src="../../../assets/iconos/research.png" class="icon">
                 Referecias:
             </label>
 
-            <p>.....</p>
+            <p>{{pedido.indicaciones}}</p>
 
             <label class="centrarIz">
               <img src="../../../assets/iconos/list (1).png" class="icon">
               Tarea:
             </label>
-            <p>Recojer ropa</p>
+            <label *ngIf="pedido.servicios.lavanderia.length>0"><p *ngFor="let tarea of pedido.servicios.lavanderia">
+              {{tarea.servicio}}
+            </p></label>
+            <label *ngIf="pedido.servicios.planchado.length>0"><p *ngFor="let tarea of pedido.servicios.planchado">
+             Servicio de Planchado
+            </p></label>
+            <label *ngIf="pedido.servicios.tintoreria.length>0"><p *ngFor="let tarea of pedido.servicios.tintoreria">
+              {{tarea.servicio}}
+            </p></label>
            
     
             <label class="centrarIz">
               <img src="../../../assets/iconos/user (1).png" class="icon">
               Receptor:
             </label>
-            <p>nombre del cliente</p>
+            <p>{{pedido.nombre_usuario}}</p>
 
 
         <label class="centrarIz">
           <img src="../../../assets/iconos/shop.png" class="icon">
           Empresa:</label>
 
-        <p>nombre de lavanderia</p>
+        <p>{{pedido.nombre_lavanderia}}</p>
 
         <label class="centrarIz">
           <img src="../../../assets/iconos/call-answer (2).png" class="icon">
           Contacto de lavanderia:
         </label>
 
-        <p>000-000-0000</p>
+        <p>{{pedido.telefono_lavanderia}}</p>
 
    
-        <div class="butonCont centrar">
+        <div>
 
-          <button (click)="this.efectos.mostrarDatos()">
-              Reagistrar pesaje
-          </button>
 
-          <button  *ngIf="this.efectos==1">
-              Validar entrega
-          </button>
+        <ion-button expand="block" (click)="aceptarEnvio()" *ngIf="botonEnvio==1">
+            Aceptar envio
+        </ion-button>
+        <ion-button expand="block" (click)="mostrarRuta()" [disabled]="this.botonEnvio==1">
+          Ver ruta de entrega
+        </ion-button>
+        <ion-button expand="block" (click)="mostrarPesaje()" [disabled]="this.botonEnvio==1" *ngIf="this.pedido.precio==''">
+          Registrar pesaje
+    </ion-button> 
+        <ion-button expand="block" (click)="pruebaM()" *ngIf="botonEnvio==0">
+          Cancelar reparto
+      </ion-button>
 
 
         </div>
@@ -118,17 +131,17 @@
 
   <div id="DATOS" class="contenedor-primordial quitar" style="overflow-y:scroll; padding: 9px;"> 
    
-    <h5 id="DATOS1" style=" color: #EFE400;">Ofertas de la empresa:</h5>
-    <p>Viernes 2x1 el lavado de ropa</p>
-    <p>Jueves planchado a mitad de precio por kilo</p>
-    <p>Miercoles 20% de descuento en lavado de almodas</p>
+    <h5 id="DATOS1" style=" color: rgb(177, 5, 5);">Ofertas de la empresa:</h5>
+    <p *ngFor="let oferta of ofertas"><strong> &#8226; {{oferta.titulo}}</strong><br>
+      <u>&nbsp;{{oferta.descripcion}}</u>
+    </p>
     <br>
     <h5 style=" color: #394a6d;">Servicios solicitados:</h5>
 
 
 
   <div class="servicios" *ngFor="let servicio of servicios">
-      <p>{{servicio.servicio}} ${{servicio.precio}} por {{servicio.unidad}}</p>
+      <p><label *ngIf="servicio.servicio==null">Planchado </label>{{servicio.servicio}} ${{servicio.precio}} por {{servicio.unidad}}</p>
    
       <br>
       
@@ -154,30 +167,38 @@
 
 
   <br>
-  <h5 style="color: #3c9d9b;">Coste de transporte:</h5>
-  <p>${{conste_de_transporte}}</p>
-    
+  <h5 style="color: #3c9d9b;">Coste de transporte:  ${{conste_de_transporte}}</h5>
   <label >
-    <button class="boto"
-    (click)="optenrTotal()"
-    >Optener total</button> = ${{total}}
+    <h3 style="color: #3c9d9b;">Total de servicio: ${{total}}</h3>
 
   </label>
   <br>
 
-  <div class="butonCont centrar" style="margin-top:20px;">
-      <ion-button 
-      (click)="this.efectos.ocultarDatos()"
-      color=danger style="width: 40%;">
-        Cancelar
-      </ion-button>
-
-      <ion-button 
-       (click)="this.efectos.ocultarDatos()"
-        color=danger style="width: 40%;">
-          Aceptar
-        </ion-button>
+  <div style="margin-top:20px;">
+    
+    <ion-button (click)="optenrTotal()" expand="block">
+      Obtener total
+    </ion-button>
+    <ion-button (click)="verAlerta()" color=danger expand="block">
+      Aceptar
+    </ion-button>
+    <ion-button (click)="this.efectos.ocultarDatos()"color=danger expand="block">
+      Cancelar
+    </ion-button>
   </div>
+  </div>
+
+  <div id="RUTA" class="contenedor-primordial quitar" style="overflow-y:scroll; padding: 9px;">
+    <div id="map" #map class="contmapa"> <ion-spinner></ion-spinner> </div>
+    <ion-content style="height: calc(97% - 260px);">
+    <div class="ion-padding-horizontal" id="panel"></div>
+  </ion-content>
+  <ion-button expand="block" (click)="entregarLavanderia()" *ngIf="this.pedido.status=='A lavandería' || this.pedido.status=='Recogiendo'">
+      Entregado a lavanderia
+  </ion-button> 
+  <ion-button expand="block" (click)="mostrarPesaje()" *ngIf="this.pedido.status=='Nuevo pedido' || this.pedido.status=='Recogiendo';">
+    Registrar pesaje
+  </ion-button> 
   </div>
 
 </ion-content>

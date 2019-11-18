@@ -4,7 +4,6 @@
     height: 82.01%;
     overflow-y: scroll;
 }
-
 .inferior{
     width: 100%;
     background: #252525;
@@ -12,14 +11,43 @@
     padding-bottom:0px;
     margin-top:0px;
 }
-
+.refresher-pulling-icon{
+    color:purple!important;
+}
+.jalar{
+    color: #FFF;
+    background: #252525;
+}
+ion-refresher ion-refresher-content {
+   --color:#FFF!important;
+   
+}
+refresher-icon-color {
+    --color:#FFF!important;
+}
+.contet2{
+    width: 93%;
+    min-height:120px;
+    padding: 5px;
+    text-decoration: none;
+    font-size: 12px;
+    background: #e00000;
+    color: rgb(0, 0, 0);
+    border-radius: 10px;
+    margin: 10px;
+    overflow: hidden;
+    -webkit-box-shadow: 10px 10px 12px -6px rgba(0,0,0,0.75);
+-moz-box-shadow: 10px 10px 12px -6px rgba(0,0,0,0.75);
+box-shadow: 10px 10px 12px -6px rgba(0,0,0,0.75);
+    position: relative;
+}
 .contet1{
     width: 93%;
     min-height:120px;
     padding: 5px;
     text-decoration: none;
     font-size: 12px;
-    background: #23374d;
+    background: #860000;
     color: white;
     border-radius: 10px;
     margin: 10px;

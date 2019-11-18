@@ -13,11 +13,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  
-
-
-
+<ion-content  class="jalar" style="z-index: -1;">
+    <ion-refresher  class="jalar" slot="fixed"(ionRefresh)="doRefresh($event)">
+      <ion-refresher-content class="jalar"></ion-refresher-content>
+    </ion-refresher>
 
 
 
@@ -84,8 +83,7 @@
 
 
 
-    <div  class="contet1 centrar" *ngFor="let pedido of pedidos" >
-
+    <div [ngClass]="{'contet2':cosa.status === 'Repartidor en camino','contet1':cosa.status != 'Repartidor en camino'}" class="centrar" *ngFor="let cosa of inicio" >
 
       <div class="mitad centrar" >
           
@@ -95,7 +93,7 @@
             Destino:
           </p> 
          <p class="centrar" style="text-align: center;">
-              {{pedido.direccion}}
+              {{cosa.direcciones}}
         </p> 
          
          
@@ -112,15 +110,29 @@
                 <img src="../../../assets/iconos/list.png" width="20px" style="margin:4px;">
                 Tarea:
               </p>
-              <p  class="centrar"  style="text-align: center;">
-                {{pedido.datos_ropa}}
-              </p>
+              <label *ngIf="cosa.servicios.lavanderia.length>0"><p  class="centrar"  style="text-align: center;" *ngFor="let cosa2 of cosa.servicios.lavanderia">
+                {{cosa2.servicio}}
+              </p></label>
+              <label *ngIf="cosa.servicios.planchado.length>0"><p  class="centrar"  style="text-align: center;" *ngFor="let cosa2 of cosa.servicios.planchado">
+               Servicio de Planchado
+              </p></label>
+              <label *ngIf="cosa.servicios.tintoreria.length>0"><p  class="centrar"  style="text-align: center;" *ngFor="let cosa2 of cosa.servicios.tintoreria">
+                {{cosa2.servicio}}
+              </p></label>
+              
           </label>
       </div>
 
-
-      <button class="bton" routerLink='/datos-solicitud'></button>
-
+      <label style="width: 100%;color: white;">
+        <p class="centrar" style="font-size: 11px;">
+          <img src="../../../assets/iconos/strategy.png" width="20px" style="margin:4px;">
+          &nbsp; Estado:  {{cosa.status}}
+        </p>
+       
+         
+      
+      </label>
+      <button class="bton" (click)="irApedido(cosa)"></button>
     </div>
 
 

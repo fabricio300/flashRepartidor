@@ -445,10 +445,10 @@
 
           <ion-button [disabled]="!formRegistro.valid"
           class="centrar"
-          (click)="Registrar()"
+          (click)="next()"
           color=none>
           
-              <img src="../../../assets/iconsWhite/check-mark.png" width="20px" style="margin: 3px;">
+              <img src="../../../assets/iconsWhite/right-arrow.png" width="20px" style="margin: 3px;">
             </ion-button>
           
           
@@ -481,21 +481,32 @@
 
 
       <div class="direccion formulario" *ngIf="actualRegitrar==1">
-        <label >
-          <br>
-            Indica tu ubicación:
-        </label>
+        <h5 style="margin-left: 10px;">Imagenes de perfil:</h5>
+        <div  style="padding: 10px; z-index: 70; height: 100%;">
+
+          <div class="contFotos ">
+            <div style="display: flex; flex-wrap: wrap; width: 100%; height: auto;">
+                <div class="contFoto" *ngFor="let imagen of imagenes">
+                    <img src="{{imagen.imagen}}" id="{{imagen.id}}" >
+                   <button *ngIf="!imagen.ultimo" class="botonBorrar centrar"
+                   (click)="borrarImagen(imagen.id)"
+                   >
+                     <img src="../../../assets/iconos/rubbish-bin-delete-button.png" width="100%">
+                   </button>
+                </div>
+          </div>
+            
 
 
-        <div class="contMapa"></div>
+          </div>
 
-
-        <label style="padding: 10px;">
-            <br>
-            Referencias:
-        </label> <br>
-        <ion-input type="text" placeholder="ejemplo: casa roja"></ion-input>
-
+          
+          <button class="AddService centrar" style="margin-right: 5px;" *ngIf="imagenes.length!=1">
+              <img src="../../../assets/iconos/upload.png" width="80%">
+              <input
+              style="position: absolute; width: 100%; height: 100%; outline: none; opacity: 0;"
+              type="file" (change)="handleFileSelect($event)"><br>
+          </button>
           <div class="centrar" style="width: 100%; margin-top: 30px;">
 
               <ion-button
@@ -517,7 +528,7 @@
             
             </div>
       </div>
-
+</div>
 
 <!-------------------------------------- Reginstro fin------------------------------------------------------------------------>    
     </div>

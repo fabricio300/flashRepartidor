@@ -226,7 +226,8 @@ export class LoginPage implements OnInit {
       contraseña: this.formRegistro.get('contrasenia').value,
       telefono: this.formRegistro.get('telefono').value,
       matricula: this.formRegistro.get('matricula').value,
-      status: 'activo',
+      foto_perfil: JSON.stringify(this.imagenes),
+      status: '2',
     }
 
 
@@ -273,5 +274,46 @@ export class LoginPage implements OnInit {
 
   await alerta.present()
   }
+  imagenes=[]
+  base64textString:any
+  idImagen=0
+  handleFileSelect(evt){
+    console.log(evt);
+    
+    var files = evt.target.files;
+    var file = files[0];
+  
+  if (files && file) {
+      var reader = new FileReader();
+  
+      reader.onload =this._handleReaderLoaded.bind(this);
+  
+      reader.readAsBinaryString(file);
+  }
+  
+  }
+  
+  
+  
+  _handleReaderLoaded(readerEvt) {
+          var binaryString = readerEvt.target.result;
+          this.base64textString= btoa(binaryString);
+         // console.log(btoa(binaryString));
+  
+          console.log("otro: \n",this.base64textString);
+  
+        this.imagenes.push({id:this.idImagen, imagen:'data:image/jpeg;base64,'+this.base64textString})
+        this.idImagen=this.idImagen+1
+         //this.imagen64='data:image/jpeg;base64,'+this.base64textString
+  }
+  
+borrarImagen(id:any){
+  for (let index = 0; index < this.imagenes.length; index++) {
+        if(this.imagenes[index].id==id){
+          this.imagenes.splice(index,1)
+        }
+    
+  }
+}
 
 }

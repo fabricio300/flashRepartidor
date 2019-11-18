@@ -21,4 +21,13 @@ export class Efectos{
         document.getElementById('DATOS').style.marginLeft="-100%"
     }
 
+    mostrarRuta() {
+        document.getElementById('RUTA').style.transition="0.5s"
+        document.getElementById('RUTA').style.marginLeft="0px"
+    }
+
+    ocultarRuta() {
+        document.getElementById('RUTA').style.marginLeft="-100%"
+    }
+
 }
