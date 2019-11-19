@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalElementService } from '../../global-element.service';
 
 import {Validators, FormBuilder, FormGroup,AbstractControl } from '@angular/forms';
@@ -40,12 +40,18 @@ export class LoginPage implements OnInit {
   placaValida='[A-Z]{3}[-][0-9]{2}[-][0-9]{2}'
 
   anterio:any
+  parametros={
+    edicion:"false",
+    id:0
+  };
+  repartidor:any;
   
   constructor(
     private router: Router,
     private global:GlobalElementService,
     private formBuilder: FormBuilder,
-    private alertacontroller: AlertController
+    private alertacontroller: AlertController,
+    private route: ActivatedRoute
   ) {
 
     this.formRegistro = this.formBuilder.group({
@@ -93,11 +99,107 @@ export class LoginPage implements OnInit {
     });
    
   }
-
-
-  
+  antes(){
+    console.log("1");
+    
+    this.route.queryParams.subscribe(params => {
+      if(JSON.stringify(params).length > 2){
+        this.parametros = JSON.parse(params.special);
+        console.log("ACABA 1");
+        
+        this.empezar()
+      }
+    })
+  }
+  empezar(){
+    console.log("2");
+    
+        if(this.parametros.edicion=="true"){
+          console.log("se editara",this.parametros);
+          this.ocultarPart('part2')
+          this.verPart('part3')
+          this.global.getUsuarioEspecifico(this.parametros.id).subscribe((response:any)=>{
+            this.repartidor = response
+            console.log(response);
+            
+            this.formRegistro = this.formBuilder.group({
+              nombre: [response.nombres, Validators.compose([
+                Validators.required,
+                Validators.pattern(this.nombreValido),
+                
+              ])],
+              contrasenia: ['',Validators.compose([
+                Validators.required,
+                Validators.pattern(this.contraseniaValida)
+              ])],
+              contraseniaConfir:['',Validators.compose([
+                Validators.required,
+                Validators.pattern(this.contraseniaValida)
+              ])],
+              telefono: [response.telefono,Validators.compose([
+                Validators.required,
+                Validators.pattern(this.numeroValido)
+              ])],
+              correo: [response.correo_electronico,Validators.compose([
+                Validators.required,
+                Validators.pattern(this.emailValido)])
+              ],
+              apellidos:[response.apellidos,Validators.compose([
+                Validators.required,
+                Validators.pattern(this.apellidosValidos)
+              ])],
+              matricula:[response.matricula,Validators.compose([
+                Validators.required,
+                Validators.pattern(this.placaValida)
+              ])]
+            });
+            this.imagenes=[]
+            console.log("cosa",JSON.parse(response.foto_perfil));
+            let imagenlista= JSON.parse(response.foto_perfil) 
+            this.imagenes=imagenlista
+        }
+          ) 
+      }
+  }
+  poner(){
+    console.log("3");
+    console.log("33",this.repartidor.nombre);
+    
+    this.formRegistro = this.formBuilder.group({
+      nombre: [this.repartidor.nombre, Validators.compose([
+        Validators.required,
+        Validators.pattern(this.nombreValido),
+        
+      ])],
+      contrasenia: ['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.contraseniaValida)
+      ])],
+      contraseniaConfir:['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.contraseniaValida)
+      ])],
+      telefono: ['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.numeroValido)
+      ])],
+      correo: ['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.emailValido)])
+      ],
+      apellidos:['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.apellidosValidos)
+      ])],
+      matricula:['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.placaValida)
+      ])]
+    });
+  }
 
   ngOnInit() {
+    this.antes()
     this.ocultarPart('part2')
     this.ocultarPart('part3')
   
@@ -212,7 +314,7 @@ export class LoginPage implements OnInit {
 
 
   irARecuperarPassword(){
-    this.router.navigate(['/menu'])
+    this.router.navigate(['/resetar'])
   }
 
 
@@ -314,6 +416,75 @@ borrarImagen(id:any){
         }
     
   }
+}
+
+regresarInicio() {
+  this.router.navigate(['/inicio']);
+}
+
+async presentAlertPrompt() {
+  const alert = await this.alertacontroller.create({
+    header: 'Prompt!',
+    inputs: [
+      {
+        name: 'name1',
+        type: 'text',
+        placeholder: 'Placeholder 1'
+      },
+      {
+        name: 'name2',
+        type: 'text',
+        id: 'name2-id',
+        value: 'hello',
+        placeholder: 'Placeholder 2'
+      },
+      {
+        name: 'name3',
+        value: 'http://ionicframework.com',
+        type: 'url',
+        placeholder: 'Favorite site ever'
+      },
+      // input date with min & max
+      {
+        name: 'name4',
+        type: 'date',
+        min: '2017-03-01',
+        max: '2018-01-12'
+      },
+      // input date without min nor max
+      {
+        name: 'name5',
+        type: 'date'
+      },
+      {
+        name: 'name6',
+        type: 'number',
+        min: -5,
+        max: 10
+      },
+      {
+        name: 'name7',
+        type: 'number'
+      }
+    ],
+    buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+          console.log('Confirm Cancel');
+        }
+      }, {
+        text: 'Ok',
+        handler: () => {
+          console.log('Confirm Ok');
+        }
+      }
+    ]
+  });
+
+  await alert.present();
 }
 
 }

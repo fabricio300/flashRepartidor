@@ -12,6 +12,14 @@ export class GlobalElementService {
 
 
   constructor(private http: HttpClient) { }
+  restablecer(info:any):Observable<any>{    
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }
+    return this.http.post(`https://gentle-springs-37285.herokuapp.com/`,info, httpOptions)
+  }
 
   registrar(info:any):Observable<any>{
     console.log("ifo=",info);
@@ -27,6 +35,9 @@ export class GlobalElementService {
 
   getUsuario(item:any){
     return  this.http.get(`${this.api}repartidores/`,item)
+  }
+  getUsuarioEspecifico(id:any){
+    return  this.http.get(`${this.api}repartidores/${id}`)
   }
   getUsuarioPedido(item:any){
     return  this.http.get(`${this.api}usuarios/`,item)
@@ -56,6 +67,14 @@ export class GlobalElementService {
       })
     }
     return  this.http.put(`${this.api}repartidores_status/${id}`,item, httpOptions)
+  }
+  cambiarData(id:any, item:any){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }
+    return  this.http.put(`${this.api}pedidos_lavanderia_datos/${id}`,item, httpOptions)
   }
   cambiarStatusLavanderia(id:any, item:any){
     const httpOptions = {
@@ -89,6 +108,14 @@ export class GlobalElementService {
     }
     return  this.http.put(`${this.api}pedidos_repartidor_costo/${id}`,item, httpOptions)
   }
+  cambiarcontraseña(id:any, item:any){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }
+    return  this.http.put(`${this.api}repartidores_cambiar_password/${id}`,item, httpOptions)
+  }
 
   getLavanderias():Observable<any>{
     const httpOptions = {
@@ -99,7 +126,14 @@ export class GlobalElementService {
     return  this.http.get(`${this.api}lavanderias`,httpOptions)
   }
 
-
+  getUsuarioCorreo(id:any):Observable<any>{
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }
+    return  this.http.get(`${this.api}repartidores_correo/${id}`,httpOptions)
+  }
   getServiciosLavanderia(id:any):Observable<any>{
     const httpOptions = {
       headers: new HttpHeaders({

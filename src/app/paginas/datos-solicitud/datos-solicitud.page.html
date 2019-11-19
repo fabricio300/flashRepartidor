@@ -106,7 +106,7 @@
         <ion-button expand="block" (click)="mostrarPesaje()" [disabled]="this.botonEnvio==1" *ngIf="this.pedido.precio==''">
           Registrar pesaje
     </ion-button> 
-        <ion-button expand="block" (click)="pruebaM()" *ngIf="botonEnvio==0">
+        <ion-button expand="block" (click)="cancelarReparto()" *ngIf="botonEnvio==0">
           Cancelar reparto
       </ion-button>
 
@@ -139,8 +139,8 @@
     <h5 style=" color: #394a6d;">Servicios solicitados:</h5>
 
 
-
-  <div class="servicios" *ngFor="let servicio of servicios">
+  <h5 *ngIf="datosLavanderia.length>0" style=" color: rgb(177, 5, 5);">Lavanderia</h5>
+  <div class="servicios" *ngFor="let servicio of datosLavanderia">
       <p><label *ngIf="servicio.servicio==null">Planchado </label>{{servicio.servicio}} ${{servicio.precio}} por {{servicio.unidad}}</p>
    
       <br>
@@ -153,7 +153,7 @@
        <label style="padding: 5px; color: #C1C1C1;"><br>=</label>
         <label  style="color: #C1C1C1;">
               Precio por servicio: <br>
-            <input type="number" onchange="optenrTotal()" id="{{servicio.servicio}}" value="{{servicio.cantidad*servicio.precio}}">
+            <input type="number" id="{{servicio.servicio}}" value="{{servicio.cantidad*servicio.precio}}">
         </label>
          
 
@@ -161,7 +161,50 @@
 
       
   </div>
+  <h5 *ngIf="datosPlanchado.length>0" style=" color: rgb(177, 5, 5);">Planchado</h5>
+  <div class="servicios" *ngFor="let servicio of datosPlanchado">
+    <p><label *ngIf="servicio.servicio==null">Planchado </label>{{servicio.servicio}} ${{servicio.precio}} por {{servicio.unidad}}</p>
+ 
+    <br>
+    
+    <div class="butonCont centrar">
+      <label style="color: #C1C1C1;">
+          Kilos / piezas: <br>
+          <input type="number" [(ngModel)]="servicio.cantidad" >
+      </label>
+     <label style="padding: 5px; color: #C1C1C1;"><br>=</label>
+      <label  style="color: #C1C1C1;">
+            Precio por servicio: <br>
+          <input type="number" id="{{servicio.servicio}}" value="{{servicio.cantidad*servicio.precio}}">
+      </label>
+       
 
+    </div>
+
+    
+</div>
+  <h5 *ngIf="datosTintoreria.length>0" style=" color: rgb(177, 5, 5);">Tintoreria</h5>  
+  <div class="servicios" *ngFor="let servicio of datosTintoreria">
+    <p><label *ngIf="servicio.servicio==null">Planchado </label>{{servicio.servicio}} ${{servicio.precio}} por {{servicio.unidad}}</p>
+ 
+    <br>
+    
+    <div class="butonCont centrar">
+      <label style="color: #C1C1C1;">
+          Kilos / piezas: <br>
+          <input type="number" [(ngModel)]="servicio.cantidad" >
+      </label>
+     <label style="padding: 5px; color: #C1C1C1;"><br>=</label>
+      <label  style="color: #C1C1C1;">
+            Precio por servicio: <br>
+          <input type="number" id="{{servicio.servicio}}" value="{{servicio.cantidad*servicio.precio}}">
+      </label>
+       
+
+    </div>
+
+    
+</div>
 
 
 
@@ -176,10 +219,10 @@
 
   <div style="margin-top:20px;">
     
-    <ion-button (click)="optenrTotal()" expand="block">
+    <ion-button (click)="getTotal()" expand="block">
       Obtener total
     </ion-button>
-    <ion-button (click)="verAlerta()" color=danger expand="block">
+    <ion-button (click)="mostrarDatos()" color=danger expand="block">
       Aceptar
     </ion-button>
     <ion-button (click)="this.efectos.ocultarDatos()"color=danger expand="block">
@@ -193,12 +236,101 @@
     <ion-content style="height: calc(97% - 260px);">
     <div class="ion-padding-horizontal" id="panel"></div>
   </ion-content>
-  <ion-button expand="block" (click)="entregarLavanderia()" *ngIf="this.pedido.status=='A lavandería' || this.pedido.status=='Recogiendo'">
+  <ion-button expand="block" (click)="entregarLavanderia()" *ngIf="this.pedido.status=='A lavandería' || this.pedido.status!='Recogiendo'">
       Entregado a lavanderia
   </ion-button> 
   <ion-button expand="block" (click)="mostrarPesaje()" *ngIf="this.pedido.status=='Nuevo pedido' || this.pedido.status=='Recogiendo';">
     Registrar pesaje
   </ion-button> 
+  </div>
+
+  <div id="SERVICIOS" class="contenedor-primordial quitar" style="overflow-y:scroll; padding: 9px;">
+    <h3 style="color: #1089ff;">
+      Servicios pedidos:
+    </h3>
+
+    <h5 *ngIf="datosLavanderia.length>0" style="color: #3c9d9b;border-bottom: 1px solid #3c9d9b;">Lavandería:</h5>
+    <div *ngFor="let lavado of datosLavanderia">
+      <p >{{lavado.servicio}} ${{lavado.precio}} por {{lavado.unidad}}</p>
+      <div *ngIf="lavado.cantidad!=0" class="centrar">
+        <p style="margin: auto; color: red;" class="centrar">
+          {{lavado.unidad}}/s: 
+          <label style="color: black;">
+            {{lavado.cantidad}}
+          </label>
+         
+        </p>
+
+        <p style="margin: auto;color: red;" class="centrar">
+          Costo:      
+          <label style="color: black;">
+            ${{lavado.costo}}
+          </label>
+        </p>
+      </div>
+    
+   </div>
+  
+    
+    <h5 *ngIf="datosTintoreria.length>0" style="color: #3c9d9b; border-bottom: 1px solid #3c9d9b;">Tintoreria:</h5>
+    <div *ngFor="let tinto of datosTintoreria">
+      <p >{{tinto.servicio}} ${{tinto.precio}} por {{tinto.unidad}}</p>
+      <div *ngIf="tinto.cantidad!=0" class="centrar">
+        <p style="margin: auto; color: red;" class="centrar">
+          {{tinto.unidad}}/s: 
+          <label style="color: black;">
+            {{tinto.cantidad}}
+          </label>
+         
+        </p>
+        <p style="margin: auto;color: red;" class="centrar">
+          Costo:      
+          <label style="color: black;">
+            ${{tinto.costo}}
+          </label>
+        </p>
+      </div>
+    
+   </div>
+
+
+    <h5 *ngIf="datosPlanchado.length>0"  style="color: #3c9d9b; border-bottom: 1px solid #3c9d9b;">Planchado:</h5>
+
+
+    <div *ngFor="let plan of datosPlanchado">
+      <p >{{plan.unidad}} ${{plan.precio}}</p>
+      <div *ngIf="plan.cantidad!=0" class="centrar">
+        <p style="margin: auto; color: red;" class="centrar">
+          {{plan.unidad}}/s:
+          <label style="color: black;">
+            ${{plan.cantidad}}
+          </label>
+         
+        </p>
+        <p style="margin: auto;color: red;" class="centrar">
+          Costo:      
+          <label style="color: black;">
+            ${{plan.costo}}
+          </label>
+        </p>
+      </div>
+    
+   </div>
+   <h5 style="color: #3c9d9b; border-bottom: 1px solid #3c9d9b;">Costo de transporte</h5>
+   <div>
+     <p >$ {{this.conste_de_transporte}}</p>
+  </div>
+   <h5 style="color: #860000; border-bottom: 1px solid #860000;">Precio Total:</h5>
+   <div>
+     <p >$ {{this.total}}</p>
+  </div>
+   
+    <ion-button (click)="verAlerta()" color=danger expand="block">
+      Aceptar
+    </ion-button>
+    <ion-button (click)="this.efectos.ocultarServicios()"color=danger expand="block">
+      Cancelar
+    </ion-button>
   </div>
 
 </ion-content>

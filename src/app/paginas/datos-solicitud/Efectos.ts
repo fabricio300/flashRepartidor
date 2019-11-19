@@ -29,5 +29,13 @@ export class Efectos{
     ocultarRuta() {
         document.getElementById('RUTA').style.marginLeft="-100%"
     }
+    mostrarServicios() {
+        document.getElementById('SERVICIOS').style.transition="0.5s"
+        document.getElementById('SERVICIOS').style.marginLeft="0px"
+    }
+
+    ocultarServicios() {
+        document.getElementById('SERVICIOS').style.marginLeft="-100%"
+    }
 
 }

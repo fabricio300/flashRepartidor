@@ -106,7 +106,12 @@ box-shadow: 10px 10px 12px -6px rgba(0,0,0,0.75);
 .butonCont::content label{
     font-size: 12px;
 }
-
+.serviciosS,.detalles{
+    //background: blueviolet;
+    width: 50%;
+    height: auto;
+    padding: 10px;
+}
 .quitar{
     overflow: hidden;
     margin-left: -100%;

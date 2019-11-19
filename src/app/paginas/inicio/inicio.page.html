@@ -13,7 +13,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content  class="jalar" style="z-index: -1;">
+<ion-content>
     <ion-refresher  class="jalar" slot="fixed"(ionRefresh)="doRefresh($event)">
       <ion-refresher-content class="jalar"></ion-refresher-content>
     </ion-refresher>
@@ -29,7 +29,7 @@
         </ion-header>
         <ion-content color=secondary>
        
-            <ion-item color=secondary *ngFor="let op of menuZ" routerLink="{{op.url}}">
+            <ion-item color=secondary *ngFor="let op of menuZ" (click)="editar()">
               <img src="{{op.icon}}" width="20px" style="margin: 3px;">
               {{op.titulo}}
             </ion-item>

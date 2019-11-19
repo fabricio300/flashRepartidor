@@ -3,6 +3,7 @@ import { MenuController, AlertController } from '@ionic/angular';
 import { GlobalElementService } from 'src/app/global-element.service';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation/ngx';
 import { NavigationExtras, Router } from '@angular/router';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-inicio',
@@ -20,15 +21,18 @@ export class InicioPage implements OnInit {
   lon:string
 
   menuZ=[
-    {
+    /*{
       titulo:'pedidos',
       icon:'../../../assets/iconos/bike.png',
       url:''
-    },
+    },*/
     {
       titulo:'Editar información',
       icon:'../../../assets/iconos/edit.png',
-      url:''
+      url:'',
+      data:{
+        cosa:"HOLA!"
+      }
     },
   ]
 
@@ -40,10 +44,20 @@ export class InicioPage implements OnInit {
     private alertacontroller: AlertController,
     private global:GlobalElementService,
     public geolocation:Geolocation,
-    private router: Router
-  ) { }
+    private router: Router,
+    private socket: Socket
+  ) { 
+    console.log("repartidor",localStorage.getItem('id'));
+    
+    socket.on('repartidor_nuevo_pedido'+localStorage.getItem('id'),(data)=>{
+      console.log("Ejecuta",data);
+      
+      this.ngOnInit()
+    })
+  }
 
   ngOnInit() {
+    this.inicio=[]
     this.global.getUsuario(localStorage.getItem('id')).subscribe(response=>{
       this.repartidor = response[0]
       this.estado(this.repartidor.status)
@@ -129,16 +143,12 @@ export class InicioPage implements OnInit {
 
   doRefresh(event) {
     console.log('Begin async operation');
-
+    this.ngOnInit()
     setTimeout(() => {
       console.log('Async operation has ended');
       event.target.complete();
     }, 2000);
   }
-
-
-
-
 
   estado(stado){
     console.log("Estado");
@@ -170,6 +180,83 @@ export class InicioPage implements OnInit {
 
   await alerta.present()
   localStorage.setItem('primera','false')
+  }
+  editar(){
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        special: JSON.stringify({
+          edicion:"true",
+          id:this.repartidor.id
+        })
+      }
+    };
+    this.router.navigate(['/login'], navigationExtras);
+    
+  }
+
+  async presentAlertPrompt() {
+    const alert = await this.alertacontroller.create({
+      header: 'Prompt!',
+      inputs: [
+        {
+          name: 'name1',
+          type: 'text',
+          placeholder: 'Placeholder 1'
+        },
+        {
+          name: 'name2',
+          type: 'text',
+          id: 'name2-id',
+          value: 'hello',
+          placeholder: 'Placeholder 2'
+        },
+        {
+          name: 'name3',
+          value: 'http://ionicframework.com',
+          type: 'url',
+          placeholder: 'Favorite site ever'
+        },
+        // input date with min & max
+        {
+          name: 'name4',
+          type: 'date',
+          min: '2017-03-01',
+          max: '2018-01-12'
+        },
+        // input date without min nor max
+        {
+          name: 'name5',
+          type: 'date'
+        },
+        {
+          name: 'name6',
+          type: 'number',
+          min: -5,
+          max: 10
+        },
+        {
+          name: 'name7',
+          type: 'number'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: () => {
+            console.log('Confirm Ok');
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
   }
 
 }

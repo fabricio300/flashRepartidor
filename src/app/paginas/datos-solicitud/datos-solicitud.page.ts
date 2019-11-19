@@ -5,6 +5,7 @@ import { NativeGeocoder, NativeGeocoderForwardResult, NativeGeocoderReverseResul
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalElementService } from 'src/app/global-element.service';
 import { AlertController } from '@ionic/angular';
+import { Socket } from 'ngx-socket-io';
  
 declare var google;
 @Component({
@@ -22,6 +23,7 @@ export class DatosSolicitudPage implements OnInit {
   pedido: any;
   mostrarPesajeVal = 0;
   mostrarRutaVal = 0;
+  mostartDatosVal = 0;
   mostrarInicio = 0;
   servicios =[];
   ofertas =[];
@@ -36,13 +38,19 @@ export class DatosSolicitudPage implements OnInit {
   waypoints=[];
 
 
+  datosLavanderia:any=[]
+  datosTintoreria:any=[]
+  datosPlanchado:any=[]
+
+
   constructor(
     private geolocation: Geolocation,
     private nativeGeocoder: NativeGeocoder,
     private route: ActivatedRoute,
     private router: Router,
     private global:GlobalElementService,
-    private alertacontroller: AlertController
+    private alertacontroller: AlertController,
+    private socket: Socket
     ) {
       this.directionsService = new google.maps.DirectionsService();
       this.directionsDisplay = new google.maps.DirectionsRenderer();
@@ -61,17 +69,12 @@ export class DatosSolicitudPage implements OnInit {
           this.servicios.push(element)
         });
         }
-        if(this.pedido.servicios.planchado!=null){
+        if(this.pedido.servicios.planchado.length >0){
         this.pedido.servicios.planchado.forEach(element => {
-          let servicio = element;
-          servicio.servicio = "Planchado"
-          this.servicios.push(servicio)
+          let cosa = element;
+          cosa.servicio = "Planchado"
+          this.servicios.push(element)
         });
-        }
-        if(this.pedido.servicios.otro!=null){
-          this.pedido.servicios.otro.forEach(element => {
-            this.servicios.push(element)
-          });
         }
         
         console.log("SERVICIOS:",this.servicios);
@@ -83,6 +86,7 @@ export class DatosSolicitudPage implements OnInit {
           this.pedido.nombre_lavanderia = response[0].nombre_lavanderia
           this.pedido.telefono_lavanderia =response[0].telefono
           this.obtenerServicios(this.pedido.lavanderia_id);
+          this.setDatosServicios()
         })
     });
       
@@ -101,7 +105,7 @@ export class DatosSolicitudPage implements OnInit {
       this.loadMap(resp);
     });
     
-    this.getCoordsFromAddress();
+    //this.getCoordsFromAddress();
   }
   
   addMarker(map:any){
@@ -303,11 +307,20 @@ export class DatosSolicitudPage implements OnInit {
 
   aceptarEnvio() {
       this.botonEnvio = 0;
-      /*this.global.cambiarStatusPedido(this.pedido.id,{status:"Recogiendo"}).subscribe(response=>{
+      this.global.cambiarStatusPedido(this.pedido.id,{status:"Recogiendo"}).subscribe(response=>{
         console.log("Cambiando status...");
-        
-      });*/
+        console.log("lavanderia",""+this.pedido.lavanderia_id);
+        console.log("usuario",""+this.pedido.lavanderia_id);
+        this.pedido.status = "Recogiendo"
+        this.sockets()
+      });
+      
 
+
+  }
+  sockets(){
+    this.socket.emit('nuevo_status',"id_lavanderia"+this.pedido.lavanderia_id)
+    this.socket.emit('nuevo_status',"id_user"+this.pedido.usuario_id)
   }
 
   obtenerServicios(lavanderia_id) {
@@ -337,6 +350,12 @@ export class DatosSolicitudPage implements OnInit {
       this.mostrarInicio = 0;
       
     }
+    if(this.mostartDatosVal==1) {
+      this.efectos.ocultarServicios()
+      this.mostartDatosVal = 0;
+      this.mostrarInicio = 0;
+      
+    }
 
     
   }
@@ -352,13 +371,32 @@ export class DatosSolicitudPage implements OnInit {
   mostrarRuta() {
     this.efectos.mostrarRuta()
     this.mostrarRutaVal = 1;
-    this.pedido.mostrarPesajeVal = 0;
+    this.mostrarPesajeVal = 0;
     this.mostrarInicio = 1;
   }
-  
+
+  mostrarDatos() {
+  this.efectos.mostrarServicios()
+  this.efectos.ocultarDatos()
+  this.mostartDatosVal = 1;
+  this.mostrarPesajeVal = 0;
+  this.mostrarInicio = 1;
+
+  }
+
   aceptarPrecio() {
     console.log("El total sera de: $",this.total);
     this.global.cambiarCostoPedido(this.pedido.id,{precio:""+this.total, status:"A lavandería"}).subscribe((response:any)=>{
+      let datos_ropa:any=JSON.stringify({
+        lavanderia:this.datosLavanderia,
+        tintoreria:this.datosTintoreria,
+        planchado:this.datosPlanchado,
+        datoRepartidor:''
+      })
+      this.global.cambiarData(this.pedido.id,{datos_ropa:datos_ropa}).subscribe(response=>{
+        //------------------->EMIT
+        this.sockets()
+      })
       console.log("CAMBIO COSTO:",response);
       this.pedido.status = response.status;
       console.log("status: ", this.pedido.status);
@@ -377,4 +415,101 @@ export class DatosSolicitudPage implements OnInit {
     })
   }
 
+  setDatosServicios(){
+    console.log("ANTES DE TOODO:", this.pedido.servicios);
+    
+    this.pedido.servicios.lavanderia.forEach(element => {
+        console.log(element);
+        let item1={
+          precio: element.precio,
+          servicio: element.servicio,
+          unidad: element.unidad,
+          cantidad:0,
+          costo:0
+        }
+        this.datosLavanderia.push(item1)
+        
+    });
+    console.log("Datos lavan", this.datosLavanderia);
+    
+  
+    this.pedido.servicios.tintoreria.forEach(element => {
+      console.log(element);
+      let item1={
+        precio: element.precio,
+        servicio: element.servicio,
+        unidad: element.unidad,
+        cantidad:0,
+        costo:0
+      }
+      this.datosTintoreria.push(item1)
+      
+  });
+  console.log("Datos datosTintoreria", this.datosTintoreria);
+
+  this.pedido.servicios.planchado.forEach(element => {
+    console.log(element);
+    let item1={
+      precio: element.precio,
+      servicio: element.servicio,
+      unidad: element.unidad,
+      cantidad:0,
+      costo:0
+    }
+    this.datosPlanchado.push(item1)
+    
+});
+console.log("Datos datosPlanchado", this.datosPlanchado);
+  
+
+
+  }
+  
+  getTotal(){
+    this.total=0
+    if(this.datosLavanderia.length>0){
+      this.datosLavanderia.forEach(element => {
+        var elemento:any 
+        elemento=document.getElementById(element.servicio)
+        console.log(elemento);
+        
+        this.total=this.total+parseInt(elemento.value)
+        element.costo=parseInt(elemento.value)
+  
+      });
+  
+    }
+    if(this.datosTintoreria.length>0){
+      this.datosTintoreria.forEach(element => {
+        var elemento:any 
+        elemento=document.getElementById(element.servicio)
+        console.log(elemento);
+        
+        this.total=this.total+parseInt(elemento.value)
+        element.costo=parseInt(elemento.value)
+  
+      });
+      
+    }
+    if(this.datosPlanchado.length>0){
+        this.datosPlanchado.forEach(element => {
+          var elemento:any 
+          elemento=document.getElementById(element.servicio)
+          console.log("AHHHHH",elemento);
+          
+          this.total=this.total+parseInt(elemento.value)
+          element.costo=parseInt(elemento.value)
+    
+        });
+    
+    
+    }
+    this.total = this.total + this.conste_de_transporte;
+    
+    
+  }
+  cancelarReparto() {
+    console.log("Cancelando...");
+    
+  }
 }

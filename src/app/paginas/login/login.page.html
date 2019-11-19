@@ -434,6 +434,7 @@
         <div class="centrar" style="width: 100%; margin-top: 30px;">
 
             <ion-button
+            *ngIf="this.parametros.edicion=='false'"
             color=none
             class="centrar"
             (click)="retornar('part3')"
@@ -442,7 +443,16 @@
        
                 <img src="../../../assets/iconsWhite/close.png" width="20px" style="margin: 3px;">
             </ion-button>
-
+            <ion-button
+            *ngIf="this.parametros.edicion=='true'"
+            color=none
+            class="centrar"
+            (click)="regresarInicio()"
+            >
+                
+       
+                <img src="../../../assets/iconsWhite/close.png" width="20px" style="margin: 3px;">
+            </ion-button>
           <ion-button [disabled]="!formRegistro.valid"
           class="centrar"
           (click)="next()"

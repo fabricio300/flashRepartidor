@@ -1,0 +1,53 @@
+<ion-header>
+  
+  <ion-toolbar color='primary'>
+      <ion-buttons slot="start">
+         <!--<ion-back-button defaultHref="/"></ion-back-button>-->
+       </ion-buttons> 
+    <ion-title style="color: E3EAE6;">Restablecer contraseña</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content color=secondary class="centrar">
+    <br><br><br><br>
+    <h5 style="text-align: center;">Ingrese su correo a continuacion y se le enviará una nueva contraseña a su correo</h5>
+    <br><br><br><br>
+    <div class="part"> 
+
+
+    <form [formGroup]="formInicio" class="formulario" style="margin-top: 10px;">
+      <label >
+        <img src="../../../assets/imagenes/at.png" style="width: 12px;">
+        Correo:</label>
+      <ion-input formControlName="nombre"   type="text" placeholder="correo@algo.com"></ion-input>
+
+      
+      <div class="infoVali" (click)="mostrarInfoCampoInicio('nombre') ">
+          <img *ngIf="!formInicio.get('nombre').hasError('required') && !formInicio.get('nombre').hasError('pattern')"
+          src="../../../assets/imagenes/information.png" style="width: 100%;">
+          <img *ngIf="formInicio.get('nombre').hasError('required') || formInicio.get('nombre').hasError('pattern')"
+          src="../../../assets/imagenes/informationX.png" style="width: 100%;">
+       </div>
+
+      <p class="infoValidator" *ngIf="infoCampoInicio.nombre">
+        Este campo es obligatorio, no debe tener números o caracteres especiales como: ¡#$%, debe tener una longitud de 3 a 50 caracteres. Puede incluir mayúsculas y minúsculas. 
+      </p>
+      
+
+    </form>
+
+    <div class="centrar" style="width: 100%; margin-top: 30px;">
+    <ion-button 
+    [disabled]="!formInicio.valid"
+    (click)="resetarPass()"
+    color="tertiary">
+        Aceptar
+      </ion-button>
+    
+      <ion-button
+      (click)="retornar()"
+      >
+          Cancelar
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
