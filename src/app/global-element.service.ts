@@ -116,6 +116,14 @@ export class GlobalElementService {
     }
     return  this.http.put(`${this.api}repartidores_cambiar_password/${id}`,item, httpOptions)
   }
+  editarUsuario(id:any, item:any){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }
+    return  this.http.put(`${this.api}repartidores_edit/${id}`,item, httpOptions)
+  }
 
   getLavanderias():Observable<any>{
     const httpOptions = {

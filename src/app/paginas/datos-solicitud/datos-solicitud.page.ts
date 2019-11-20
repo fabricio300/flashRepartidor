@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Efectos } from './Efectos';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation/ngx';
 import { NativeGeocoder, NativeGeocoderForwardResult, NativeGeocoderReverseResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { GlobalElementService } from 'src/app/global-element.service';
 import { AlertController } from '@ionic/angular';
 import { Socket } from 'ngx-socket-io';
@@ -41,6 +41,7 @@ export class DatosSolicitudPage implements OnInit {
   datosLavanderia:any=[]
   datosTintoreria:any=[]
   datosPlanchado:any=[]
+  subtotal: any;
 
 
   constructor(
@@ -52,6 +53,16 @@ export class DatosSolicitudPage implements OnInit {
     private alertacontroller: AlertController,
     private socket: Socket
     ) {
+      socket.on('repartidor_nuevo_pedido'+localStorage.getItem('id'),(data)=>{
+        console.log("Ejecuta",data);
+        
+        this.router.navigate(['/inicio']);
+      })
+          socket.on('asignar_repartidor'+localStorage.getItem('id'),(data)=>{
+        console.log("Ejecuta",data);
+        
+        this.router.navigate(['/inicio']);
+      })
       this.directionsService = new google.maps.DirectionsService();
       this.directionsDisplay = new google.maps.DirectionsRenderer();
       this.bounds = new google.maps.LatLngBounds();
@@ -81,6 +92,7 @@ export class DatosSolicitudPage implements OnInit {
         
         this.global.getUsuarioPedido(this.pedido.usuario_id).subscribe(response=>{
           this.pedido.nombre_usuario = response[0].nombres + " " + response[0].apellidos 
+          this.pedido.telefono_usuario = response[0].telefono
         })
         this.global.getLavanderia(this.pedido.lavanderia_id).subscribe(response=>{
           this.pedido.nombre_lavanderia = response[0].nombre_lavanderia
@@ -94,6 +106,11 @@ export class DatosSolicitudPage implements OnInit {
   }
   conste_de_transporte=30
   total=0
+  ionViewWillEnter() {
+    console.log("Hola");
+    this.ngOnInit()
+    
+  }
 
   ngOnInit() {
     if(this.pedido.status=="A lavandería") {
@@ -183,29 +200,56 @@ export class DatosSolicitudPage implements OnInit {
   
     this.map.fitBounds(this.bounds);
 
-    this.directionsService.route({
-      origin: new google.maps.LatLng(this.myLatLng.lat, this.myLatLng.lng),
-      destination: new google.maps.LatLng(this.pedido.coordenadas_lavanderia.lat,this.pedido.coordenadas_lavanderia.lon),
-      waypoints: this.waypoints,
-      optimizeWaypoints: true,
-      travelMode: google.maps.TravelMode.DRIVING,
-      avoidTolls: true
-    }, (response, status)=> {
-      if(status === google.maps.DirectionsStatus.OK) {
-        console.log(response);
-        this.directionsDisplay.setDirections(response);
-      }else{
-        alert('Could not display directions due to: ' + status);
-      }
-    });  
+    if(this.pedido.status == 'En proceso'){
+      this.directionsService.route({
+        origin: new google.maps.LatLng(this.myLatLng.lat, this.myLatLng.lng),
+        destination: new google.maps.LatLng(this.pedido.coordenadas_usuario.lat,this.pedido.coordenadas_usuario.lon),
+        waypoints: this.waypoints,
+        optimizeWaypoints: true,
+        travelMode: google.maps.TravelMode.DRIVING,
+        avoidTolls: true
+      }, (response, status)=> {
+        if(status === google.maps.DirectionsStatus.OK) {
+          console.log(response);
+          this.directionsDisplay.setDirections(response);
+        }else{
+          alert('Could not display directions due to: ' + status);
+        }
+      });  
+    }else{
+      this.directionsService.route({
+        origin: new google.maps.LatLng(this.myLatLng.lat, this.myLatLng.lng),
+        destination: new google.maps.LatLng(this.pedido.coordenadas_lavanderia.lat,this.pedido.coordenadas_lavanderia.lon),
+        waypoints: this.waypoints,
+        optimizeWaypoints: true,
+        travelMode: google.maps.TravelMode.DRIVING,
+        avoidTolls: true
+      }, (response, status)=> {
+        if(status === google.maps.DirectionsStatus.OK) {
+          console.log(response);
+          this.directionsDisplay.setDirections(response);
+        }else{
+          alert('Could not display directions due to: ' + status);
+        }
+      });  
+    }
   }
 
   crearWayspoints() {
-    this.waypoints.push(
-      {
-        location: { lat: this.pedido.coordenadas_usuario.lat, lng: this.pedido.coordenadas_usuario.lon },
-        stopover: true,
-      });
+    if(this.pedido.status == 'En proceso') {
+      this.waypoints.push(
+        {
+          location: { lat: this.pedido.coordenadas_lavanderia.lat, lng: this.pedido.coordenadas_lavanderia.lon },
+          stopover: true,
+        });
+    }else{
+      this.waypoints.push(
+        {
+          location: { lat: this.pedido.coordenadas_usuario.lat, lng: this.pedido.coordenadas_usuario.lon },
+          stopover: true,
+        });
+    }
+
       /*this.waypoints.push(
       {
         location: { lat: this.pedido.coordenadas_lavanderia.lat, lng: this.pedido.coordenadas_lavanderia.lon },
@@ -307,13 +351,22 @@ export class DatosSolicitudPage implements OnInit {
 
   aceptarEnvio() {
       this.botonEnvio = 0;
-      this.global.cambiarStatusPedido(this.pedido.id,{status:"Recogiendo"}).subscribe(response=>{
-        console.log("Cambiando status...");
-        console.log("lavanderia",""+this.pedido.lavanderia_id);
-        console.log("usuario",""+this.pedido.lavanderia_id);
-        this.pedido.status = "Recogiendo"
-        this.sockets()
-      });
+      if(this.pedido.status == 'En proceso') {
+        this.global.cambiarStatusPedido(this.pedido.id,{status:"Entregando"}).subscribe(response=>{
+          console.log("Cambiando status...");
+          this.pedido.status = "Entregando"
+          this.sockets()
+        });
+      } else{
+        this.global.cambiarStatusPedido(this.pedido.id,{status:"Recogiendo"}).subscribe(response=>{
+          console.log("Cambiando status...");
+          console.log("lavanderia",""+this.pedido.lavanderia_id);
+          console.log("usuario",""+this.pedido.lavanderia_id);
+          this.pedido.status = "Recogiendo"
+          this.sockets()
+        });
+      }
+
       
 
 
@@ -322,7 +375,6 @@ export class DatosSolicitudPage implements OnInit {
     this.socket.emit('nuevo_status',"id_lavanderia"+this.pedido.lavanderia_id)
     this.socket.emit('nuevo_status',"id_user"+this.pedido.usuario_id)
   }
-
   obtenerServicios(lavanderia_id) {
       this.global.getServiciosOferta(lavanderia_id).subscribe(response=>{
         this.ofertas =[];
@@ -335,7 +387,12 @@ export class DatosSolicitudPage implements OnInit {
 
   back() {
     if(this.mostrarInicio != 1){
-      this.router.navigate(['/inicio']);
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+          special: "atras"
+        }
+      };
+      this.router.navigate(['/inicio'],navigationExtras);
       
     }
     if(this.mostrarPesajeVal==1) {
@@ -386,7 +443,15 @@ export class DatosSolicitudPage implements OnInit {
 
   aceptarPrecio() {
     console.log("El total sera de: $",this.total);
-    this.global.cambiarCostoPedido(this.pedido.id,{precio:""+this.total, status:"A lavandería"}).subscribe((response:any)=>{
+    let precio_entregar = this.pedido.precio.precio_entregar
+    let precio_lavanderia = this.total
+    let precio_regocojer = this.pedido.precio.precio_regocojer
+    let precio = {
+      precio_entregar: precio_entregar,
+      precio_lavanderia: this.total,
+      precio_regocojer: precio_regocojer
+    }
+    this.global.cambiarCostoPedido(this.pedido.id,{precio:JSON.stringify(precio), status:"A lavandería"}).subscribe((response:any)=>{
       let datos_ropa:any=JSON.stringify({
         lavanderia:this.datosLavanderia,
         tintoreria:this.datosTintoreria,
@@ -402,8 +467,11 @@ export class DatosSolicitudPage implements OnInit {
       console.log("status: ", this.pedido.status);
       this.mostrarPesajeVal= 0;
       this.mostrarRutaVal = 1;
-      this.efectos.ocultarDatos();
+      this.efectos.ocultarServicios();
       this.efectos.mostrarRuta();
+      if(this.pedido.status == 'En proceso') {
+        this.router.navigate(['/inicio']);
+      }
     })
     
   }
@@ -411,6 +479,7 @@ export class DatosSolicitudPage implements OnInit {
   entregarLavanderia() {
     this.global.cambiarStatusLavanderia(this.pedido.id,{status:"En proceso", repartidor_id:null}).subscribe(response=>{
       console.log("cambio status ", response);
+      this.sockets()
       this.router.navigate(['/inicio']);
     })
   }
@@ -469,9 +538,11 @@ console.log("Datos datosPlanchado", this.datosPlanchado);
     this.total=0
     if(this.datosLavanderia.length>0){
       this.datosLavanderia.forEach(element => {
+        console.log("element", element);
+        
         var elemento:any 
         elemento=document.getElementById(element.servicio)
-        console.log(elemento);
+        console.log(elemento.value);
         
         this.total=this.total+parseInt(elemento.value)
         element.costo=parseInt(elemento.value)
@@ -501,11 +572,11 @@ console.log("Datos datosPlanchado", this.datosPlanchado);
           element.costo=parseInt(elemento.value)
     
         });
-    
+
     
     }
-    this.total = this.total + this.conste_de_transporte;
-    
+    this.subtotal = this.total + parseInt(this.pedido.precio.precio_entregar);
+    console.log("SUB TOTAL: ", this.subtotal);
     
   }
   cancelarReparto() {

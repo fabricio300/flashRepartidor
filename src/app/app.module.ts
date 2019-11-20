@@ -14,13 +14,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { GoogleMaps } from '@ionic-native/google-maps';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
+import { ModalPage } from './paginas/login/login.page';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const config: SocketIoConfig = { url: 'http://165.227.60.169', options: {} };
  
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent,ModalPage],
+  entryComponents: [ModalPage],
   imports: 
   [
   SocketIoModule.forRoot(config),
@@ -28,6 +30,7 @@ const config: SocketIoConfig = { url: 'http://165.227.60.169', options: {} };
   BrowserModule,
   IonicModule.forRoot(),
   AppRoutingModule,
+  ReactiveFormsModule
   ],
   providers: [
     StatusBar,

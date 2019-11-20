@@ -28,7 +28,8 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.platform.backButton.observers.pop()
-      //this.time()
+      this.statusBar.backgroundColorByHexString('#ff0000')
+      this.time()
       //this.splashScreen.hide();
     });
   }

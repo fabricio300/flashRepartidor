@@ -12,61 +12,32 @@
    
   </ion-toolbar>
 </ion-header>
+<ion-menu side="start" menuId="first" style="position: fixed; z-index: 100;">
+  <ion-header>
+    <ion-toolbar color="secondary">
+      <img src="../../../assets/iconos/flaswash2.png" width="100%">
+      
+    </ion-toolbar>
+  </ion-header>
+  <ion-content color=secondary>
+ 
+    <ion-item color=secondary (click)="presentAlertPrompt()">
+      <img src="../../../assets/iconos/edit.png" width="20px" style="margin: 3px;">
+      Editar información
+    </ion-item>
+    <ion-item color=secondary (click)="cerrarSesion()">
+      <img src="../../../assets/iconos/close.png" width="20px" style="margin: 3px;">
+      Cerrar sesión
+    </ion-item>
+   
 
+  </ion-content>
+</ion-menu>
+<ion-router-outlet main></ion-router-outlet>
 <ion-content>
     <ion-refresher  class="jalar" slot="fixed"(ionRefresh)="doRefresh($event)">
       <ion-refresher-content class="jalar"></ion-refresher-content>
     </ion-refresher>
-
-
-
-    <ion-menu side="start" menuId="first" style="position: fixed; z-index: 100;">
-        <ion-header>
-          <ion-toolbar color="secondary">
-            <img src="../../../assets/iconos/flaswash2.png" width="100%">
-            
-          </ion-toolbar>
-        </ion-header>
-        <ion-content color=secondary>
-       
-            <ion-item color=secondary *ngFor="let op of menuZ" (click)="editar()">
-              <img src="{{op.icon}}" width="20px" style="margin: 3px;">
-              {{op.titulo}}
-            </ion-item>
-         
-     
-        </ion-content>
-      </ion-menu>
-
-
-
-  <ion-router-outlet main></ion-router-outlet>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!--<div style="background-color: #252525;">
   &nbsp;
@@ -140,69 +111,43 @@
 
   </div>
 
+</ion-content>
+<div class="inferior centrar" style="z-index: 2;">
+
+  <div class="mitad centrar" style="justify-content: left; padding: 5px; width: 40%;">
+      <h6>Me encuentro: </h6>
+  </div>
 
 
 
+  <div class="mitad centrar" style="width: 60%;">
+     <div class="mitad centrar">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="inferior centrar">
-
-    <div class="mitad centrar" style="justify-content: left; padding: 5px; width: 40%;">
-        <h6>Me encuentro: </h6>
-    </div>
-
-
-
-    <div class="mitad centrar" style="width: 60%;">
-       <div class="mitad centrar">
-
-              <p class="centrar" style="font-size: 10px;" >
-                <img src="{{servicio}}" style="width: 25px; margin: 10px; cursor: pointer;" >
-                <br>
-               <a
-               [ngClass]="{'colorx':stadoDelRepartidor==1, 'blanco':stadoDelRepartidor!=1}"
-               style="width: 100%; text-align: center; "> En servicio</a> 
-              </p>
-              <button class="bton" (click)="estado(1)"></button>
-       </div> 
-
-
-       <div class="mitad centrar">
-        
             <p class="centrar" style="font-size: 10px;" >
-              <img src="{{descansando}}" style="width: 25px; margin: 10px;">
+              <img src="{{servicio}}" style="width: 25px; margin: 10px; cursor: pointer;" >
               <br>
-               <a 
-               [ngClass]="{'colorx':stadoDelRepartidor==2, 'blanco':stadoDelRepartidor!=2}"
-               style="width: 100%; text-align: center; "> Descansando</a> 
+             <a
+             [ngClass]="{'colorx':stadoDelRepartidor==1, 'blanco':stadoDelRepartidor!=1}"
+             style="width: 100%; text-align: center; "> En servicio</a> 
             </p>
-            <button class="bton" (click)="estado(2)"></button>
-       </div> 
-
-    </div>
+            <button class="bton" (click)="estado(1)"></button>
+     </div> 
 
 
+     <div class="mitad centrar">
+      
+          <p class="centrar" style="font-size: 10px;" >
+            <img src="{{descansando}}" style="width: 25px; margin: 10px;">
+            <br>
+             <a 
+             [ngClass]="{'colorx':stadoDelRepartidor==2, 'blanco':stadoDelRepartidor!=2}"
+             style="width: 100%; text-align: center; "> Descansando</a> 
+          </p>
+          <button class="bton" (click)="estado(2)"></button>
+     </div> 
 
   </div>
 
 
 
-
-
-
-</ion-content>
+</div>

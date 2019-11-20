@@ -79,6 +79,13 @@
             </label>
             <p>{{pedido.nombre_usuario}}</p>
 
+            <label class="centrarIz">
+              <img src="../../../assets/iconos/call-answer (2).png" class="icon">
+              Contacto de receptor:
+            </label>
+    
+            <p>{{pedido.telefono_usuario}}</p>
+
 
         <label class="centrarIz">
           <img src="../../../assets/iconos/shop.png" class="icon">
@@ -210,9 +217,9 @@
 
 
   <br>
-  <h5 style="color: #3c9d9b;">Coste de transporte:  ${{conste_de_transporte}}</h5>
+  <h5 style="color: #3c9d9b;">Coste de transporte:  ${{pedido.precio.precio_regocojer}}</h5>
   <label >
-    <h3 style="color: #3c9d9b;">Total de servicio: ${{total}}</h3>
+    <h3 style="color: #3c9d9b;">Total de servicio: ${{subtotal}}</h3>
 
   </label>
   <br>
@@ -233,11 +240,11 @@
 
   <div id="RUTA" class="contenedor-primordial quitar" style="overflow-y:scroll; padding: 9px;">
     <div id="map" #map class="contmapa"> <ion-spinner></ion-spinner> </div>
-    <ion-content style="height: calc(97% - 260px);">
+    <ion-content style="height: calc(40% - 50px);">
     <div class="ion-padding-horizontal" id="panel"></div>
   </ion-content>
-  <ion-button expand="block" (click)="entregarLavanderia()" *ngIf="this.pedido.status=='A lavandería' || this.pedido.status!='Recogiendo'">
-      Entregado a lavanderia
+  <ion-button expand="block" href="/inicio?special=atras" *ngIf="this.pedido.status=='A lavandería' || this.pedido.status=='Entregando';">
+    Regresar a Inicio
   </ion-button> 
   <ion-button expand="block" (click)="mostrarPesaje()" *ngIf="this.pedido.status=='Nuevo pedido' || this.pedido.status=='Recogiendo';">
     Registrar pesaje
@@ -318,11 +325,11 @@
    </div>
    <h5 style="color: #3c9d9b; border-bottom: 1px solid #3c9d9b;">Costo de transporte</h5>
    <div>
-     <p >$ {{this.conste_de_transporte}}</p>
+     <p >$ {{this.pedido.precio.precio_regocojer}}</p>
   </div>
    <h5 style="color: #860000; border-bottom: 1px solid #860000;">Precio Total:</h5>
    <div>
-     <p >$ {{this.total}}</p>
+     <p >$ {{this.subtotal}}</p>
   </div>
    
     <ion-button (click)="verAlerta()" color=danger expand="block">

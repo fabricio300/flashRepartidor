@@ -1,10 +1,82 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalElementService } from '../../global-element.service';
+import { NavParams } from '@ionic/angular';
+
 
 import {Validators, FormBuilder, FormGroup,AbstractControl } from '@angular/forms';
 import { variable } from '@angular/compiler/src/output/output_ast';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
+import { modalController } from '@ionic/core';
+
+@Component({
+  selector: 'modal-page',
+  templateUrl: './contra.modal.html',
+  styleUrls: ['./login.page.scss'],
+})
+export class ModalPage {
+  private formEdicion: FormGroup;
+
+  infoCampos={
+    contrasenia:false,
+    contrasenia2:false,
+  }
+  contraseniaValida='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$'
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private global:GlobalElementService,
+    private alertacontroller: AlertController
+  ) {
+
+    this.formEdicion = this.formBuilder.group({
+      contrasenia: ['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.contraseniaValida)
+      ])],
+      contraseniaConfir:['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.contraseniaValida)
+      ])],
+    });
+
+  }
+
+  mostrarInfoCampo(tipo){   
+    console.log("eci");
+
+    switch(tipo){
+      case 'contrasenia': if(this.infoCampos.contrasenia==true){ this.infoCampos.contrasenia=false }else {this.infoCampos.contrasenia=true}
+      break;
+      case 'contrasenia2': if(this.infoCampos.contrasenia2==true){ this.infoCampos.contrasenia2=false }else {this.infoCampos.contrasenia2=true}
+      break;
+    }  
+  }
+  back() {
+    modalController.dismiss()
+  }
+  Cambiar() {
+    this.global.cambiarcontraseña(localStorage.getItem('id'),{contraseña:this.formEdicion.get('contrasenia').value,}).subscribe(response=>{
+      console.log("response",response);
+      
+      this.alerta()
+      modalController.dismiss()
+    })
+
+  }
+  async alerta() {
+    const alerta=await this.alertacontroller.create({
+      header:'Error',
+      subHeader:'Correo o contraseña incorrectos',
+      message:'vuelva a intentar',
+      buttons:['Aceptar']
+
+  })
+
+  await alerta.present()
+  }
+
+}
 
 
 @Component({
@@ -14,8 +86,9 @@ import { AlertController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
   actualRegitrar=0
-  private formRegistro : FormGroup
-  private formInicio:FormGroup
+  private formRegistro : FormGroup;
+  private formInicio:FormGroup;
+  private formEdicion: FormGroup;
 
   infoCampos={
     nombre:false,
@@ -51,8 +124,16 @@ export class LoginPage implements OnInit {
     private global:GlobalElementService,
     private formBuilder: FormBuilder,
     private alertacontroller: AlertController,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public modalController: ModalController
   ) {
+    this.parametros={
+      edicion:"false",
+      id:0
+    };
+    if(localStorage.getItem('recarga') == 'true' && localStorage.getItem('editar')==='false'){
+      this.cosa()
+    }
 
     this.formRegistro = this.formBuilder.group({
       nombre: ['', Validators.compose([
@@ -97,44 +178,70 @@ export class LoginPage implements OnInit {
         Validators.pattern(this.contraseniaValida)
       ])],
     });
+
+    this.formEdicion = this.formBuilder.group({
+      nombre: ['', Validators.compose([
+        Validators.required,
+        Validators.pattern(this.nombreValido),
+        
+      ])],
+      telefono: ['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.numeroValido)
+      ])],
+      correo: ['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.emailValido)])
+      ],
+      apellidos:['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.apellidosValidos)
+      ])],
+      matricula:['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.placaValida)
+      ])]
+    });
    
+  }
+  cosa(){
+    localStorage.setItem('editar','true')
+    location.reload();
+   
+    console.log("quita todo ostia");
+    
+    
   }
   antes(){
     console.log("1");
     
+    this.verPart('part4')
     this.route.queryParams.subscribe(params => {
       if(JSON.stringify(params).length > 2){
         this.parametros = JSON.parse(params.special);
         console.log("ACABA 1");
-        
+        this.verPart('part4')
         this.empezar()
       }
     })
   }
   empezar(){
     console.log("2");
-    
+    this.verPart('part4')
         if(this.parametros.edicion=="true"){
           console.log("se editara",this.parametros);
           this.ocultarPart('part2')
-          this.verPart('part3')
+          this.verPart('part4')
+          this.actualRegitrar=0;
           this.global.getUsuarioEspecifico(this.parametros.id).subscribe((response:any)=>{
             this.repartidor = response
             console.log(response);
             
-            this.formRegistro = this.formBuilder.group({
+            this.formEdicion = this.formBuilder.group({
               nombre: [response.nombres, Validators.compose([
                 Validators.required,
                 Validators.pattern(this.nombreValido),
                 
-              ])],
-              contrasenia: ['',Validators.compose([
-                Validators.required,
-                Validators.pattern(this.contraseniaValida)
-              ])],
-              contraseniaConfir:['',Validators.compose([
-                Validators.required,
-                Validators.pattern(this.contraseniaValida)
               ])],
               telefono: [response.telefono,Validators.compose([
                 Validators.required,
@@ -160,6 +267,28 @@ export class LoginPage implements OnInit {
         }
           ) 
       }
+      this.verPart('part4')
+  }
+  guardarEdit(){
+    let item={
+      nombres:this.formEdicion.get('nombre').value,
+      apellidos:this.formEdicion.get('apellidos').value,
+      correo_electronico: this.formEdicion.get('correo').value,
+      telefono: this.formEdicion.get('telefono').value,
+      matricula: this.formEdicion.get('matricula').value,
+      foto_perfil: JSON.stringify(this.imagenes),
+    }
+
+
+    this.global.editarUsuario(localStorage.getItem('id') ,item).subscribe((response:any)=>{
+      console.log("editado");
+      localStorage.setItem('primera','true')
+      console.log(response);      
+      localStorage.setItem('id',response.id)
+      this.iniciar()
+    })
+
+
   }
   poner(){
     console.log("3");
@@ -197,11 +326,28 @@ export class LoginPage implements OnInit {
       ])]
     });
   }
+  ionViewWillEnter() {
+    this.actualRegitrar=0;
+    if(localStorage.getItem('secion')== null) {
+      this.verPart('part1')
+      this.ocultarPart('part4')
+      this.actualRegitrar=0;
+    }
+  }
 
   ngOnInit() {
+
+    if(localStorage.getItem('secion')== 'true' && localStorage.getItem('editar')==='false'){
+      console.log("SE INICIA SESION");
+      this.iniciar()
+    }
+    if(localStorage.getItem('editar')==='false'){
+      //this.cosa()
+    }
     this.antes()
     this.ocultarPart('part2')
     this.ocultarPart('part3')
+    this.ocultarPart('part4')
   
   }
 
@@ -216,8 +362,14 @@ export class LoginPage implements OnInit {
       this.verPart('part1')
   }
 
+  async cambiarContrasenia() {
+    const modal = await this.modalController.create({
+      component: ModalPage
+    });
+    return await modal.present();
+  
 
-
+  }
 
   verPart(id){
     document.getElementById(id).style.transition="0.5s"
@@ -329,7 +481,6 @@ export class LoginPage implements OnInit {
       telefono: this.formRegistro.get('telefono').value,
       matricula: this.formRegistro.get('matricula').value,
       foto_perfil: JSON.stringify(this.imagenes),
-      status: '2',
     }
 
 
@@ -419,6 +570,7 @@ borrarImagen(id:any){
 }
 
 regresarInicio() {
+  localStorage.setItem('editar','false')
   this.router.navigate(['/inicio']);
 }
 

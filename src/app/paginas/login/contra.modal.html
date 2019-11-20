@@ -1,0 +1,77 @@
+<ion-header>
+  
+    <ion-toolbar color='primary'>
+        <ion-buttons slot="start">
+           <!-- <ion-back-button defaultHref="/inicio"></ion-back-button>-->
+         </ion-buttons> 
+      <ion-title style="color: E3EAE6;">Cambiar contraseñoa</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content color=secondary class="centrar">
+    <div class="part " id="part4"> 
+        <br><br>
+        
+            <form [formGroup]="formEdicion" class="formulario" style="height: auto; padding-top:15px; width: 85%;">
+            
+                <label >
+                    <img src="../../../assets/imagenes/key.png" style="width: 12px;">
+                    Contraseña: </label>
+                  <ion-input formControlName="contrasenia" type="password" placeholder="*******"></ion-input>
+          
+                  <div class="infoVali" (click)="mostrarInfoCampo('contrasenia') ">
+                      <img *ngIf="!formEdicion.get('contrasenia').hasError('required') && !formEdicion.get('contrasenia').hasError('pattern')"
+                      src="../../../assets/imagenes/information.png" style="width: 100%;">
+                      <img *ngIf="formEdicion.get('contrasenia').hasError('required') || formEdicion.get('contrasenia').hasError('pattern')"
+                      src="../../../assets/imagenes/informationX.png" style="width: 100%;">
+                   </div>
+          
+                  <p class="infoValidator" *ngIf="infoCampos.contrasenia">
+                    Campo obligatorio, este debe tener: letras mayúsculas y minúsculas, al menos un número, al menos un carácter especial (#?!@$%^&*-) y una longitud de 8 a 15 caracteres sin espacios.
+                  </p>
+          
+          
+                  <label >
+                      <img src="../../../assets/imagenes/lock.png" style="width: 12px;">
+                      Comfirma tu contraseña: </label>
+                  <ion-input formControlName="contraseniaConfir" type="password" placeholder="********"></ion-input>
+          
+                  <div class="infoVali" (click)="mostrarInfoCampo('contrasenia2')">
+                      <img *ngIf="!formEdicion.get('contraseniaConfir').hasError('required') && !formEdicion.get('contraseniaConfir').hasError('pattern')"
+                      src="../../../assets/imagenes/information.png" style="width: 100%;">
+                      <img *ngIf="formEdicion.get('contraseniaConfir').hasError('required') || formEdicion.get('contraseniaConfir').hasError('pattern')"
+                      src="../../../assets/imagenes/informationX.png" style="width: 100%;">
+                   </div>
+          
+                  <p class="infoValidator" *ngIf="infoCampos.contrasenia2">
+                    Campo obligatorio, este campo debe coincidir con el campo contraseña. 
+                  </p>
+            
+            
+            
+            
+            </form>
+
+                
+                  <div class="centrar" style="width: 100%; margin-top: 30px;">
+        
+                      <ion-button
+                      color=none
+                      class="centrar"
+                      (click)="back()"
+                      >
+                             <img src="../../../assets/iconsWhite/left-arrow.png" width="20px" style="margin: 3px;">
+                      </ion-button>
+        
+                    <ion-button [disabled]="!formEdicion.valid"
+                    class="centrar"
+                    (click)="Cambiar()"
+                    color=none
+                    >
+                        <img src="../../../assets/iconsWhite/check-mark.png" width="20px" style="margin: 3px;">
+                    </ion-button>
+                    
+                    
+                    </div>
+    </div>
+  </ion-content>

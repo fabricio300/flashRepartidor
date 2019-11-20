@@ -7,7 +7,7 @@
 
 
 .contmapa{
-    height: 37%;
+    height: 60%;
     widows: 100%;
     background: white;
 }
@@ -115,4 +115,11 @@ box-shadow: 10px 10px 12px -6px rgba(0,0,0,0.75);
 .quitar{
     overflow: hidden;
     margin-left: -100%;
+}
+.inferior{
+    width: 100%;
+    background: #252525;
+    height: 18.050%;
+    padding-bottom:0px;
+    margin-top:0px;
 }

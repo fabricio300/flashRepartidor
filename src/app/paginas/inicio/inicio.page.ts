@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
 import { GlobalElementService } from 'src/app/global-element.service';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation/ngx';
-import { NavigationExtras, Router } from '@angular/router';
+import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
 
 @Component({
@@ -20,21 +20,6 @@ export class InicioPage implements OnInit {
   lat:string
   lon:string
 
-  menuZ=[
-    /*{
-      titulo:'pedidos',
-      icon:'../../../assets/iconos/bike.png',
-      url:''
-    },*/
-    {
-      titulo:'Editar información',
-      icon:'../../../assets/iconos/edit.png',
-      url:'',
-      data:{
-        cosa:"HOLA!"
-      }
-    },
-  ]
 
   pedidos:any;
   inicio=[]
@@ -45,8 +30,10 @@ export class InicioPage implements OnInit {
     private global:GlobalElementService,
     public geolocation:Geolocation,
     private router: Router,
-    private socket: Socket
+    private socket: Socket,
+    private route: ActivatedRoute,
   ) { 
+    this.inicio=[]
     console.log("repartidor",localStorage.getItem('id'));
     
     socket.on('repartidor_nuevo_pedido'+localStorage.getItem('id'),(data)=>{
@@ -54,15 +41,36 @@ export class InicioPage implements OnInit {
       
       this.ngOnInit()
     })
+        socket.on('asignar_repartidor'+localStorage.getItem('id'),(data)=>{
+      console.log("Ejecuta",data);
+      
+      this.ngOnInit()
+    })
   }
+  ionViewWillEnter() {
+    console.log("Hola");
+    
+    this.route.queryParams.subscribe(params => {
+      if(params.special == 'atras'){
+        this.inicio=[]
+        this.inicio1()
+      }else{
 
+      }
+    });
+  }
   ngOnInit() {
     this.inicio=[]
-    this.global.getUsuario(localStorage.getItem('id')).subscribe(response=>{
-      this.repartidor = response[0]
+    console.log("limpio");
+            
+    this.global.getUsuarioEspecifico(localStorage.getItem('id')).subscribe(response=>{
+      this.repartidor = response
+      console.log("AQUI ESTA EL REPARTIDOR:", this.repartidor);
+      
       this.estado(this.repartidor.status)
     });
     this.global.getPedidos(localStorage.getItem('id')).subscribe(response=>{
+      this.inicio=[]
       console.log(response[0]);
       let cosa:any = response
       cosa.forEach(element => {
@@ -78,7 +86,7 @@ export class InicioPage implements OnInit {
           id: element.id,
           indicaciones: element.indicaciones,
           lavanderia_id: element.lavanderia_id,
-          precio: element.precio,
+          precio: JSON.parse(element.precio),
           repartidor_id: element.repartidor_id,
           status: element.status,
           usuario_id: element.usuario_id,
@@ -92,13 +100,44 @@ export class InicioPage implements OnInit {
       
       this.pedidos = response;
     })
-    if(localStorage.getItem('primera')=='true'){
-      this.verAlerta()
-    }
-    if(!localStorage.getItem('primera')){
-      this.verAlerta()
-    }
     //this.time();
+  }
+  inicio1() {
+    this.inicio=[]
+    this.global.getPedidos(localStorage.getItem('id')).subscribe(response=>{
+      this.inicio=[]
+      console.log(response[0]);
+      console.log("lksdufynaiweuyrviayuweorvaywervayuwoeriuvyabwoeiryaweiu");
+      
+      let cosa:any = response
+      cosa.forEach(element => {
+        console.log(element)
+        this.inicio.push({
+          coordenadas_lavanderia: JSON.parse(element.coordenadas_lavanderia),
+          coordenadas_repartidor: JSON.parse(element.coordenadas_repartidor),
+          coordenadas_usuario: JSON.parse(element.coordenadas_usuario),
+          datos_ropa: element.datos_ropa,
+          direccion_lavanderia: element.direccion_lavanderia,
+          direccion_usuario: element.direccion_usuario,
+          fecha_pedido: JSON.parse(element.fecha_pedido),
+          id: element.id,
+          indicaciones: element.indicaciones,
+          lavanderia_id: element.lavanderia_id,
+          precio: JSON.parse(element.precio),
+          repartidor_id: element.repartidor_id,
+          status: element.status,
+          usuario_id: element.usuario_id,
+          direcciones :element.direccion_usuario,
+          servicios:JSON.parse(element.servicios),
+          tipo_entrega:element.tipo_entrega
+        })
+        console.log("INICIO:",this.inicio)
+        
+      });
+      
+      this.pedidos = response;
+    })
+
   }
 
   time() {
@@ -126,6 +165,8 @@ export class InicioPage implements OnInit {
   }
   
   openFirst() {
+    console.log("LO HACE");
+    
     this.menu.enable(true, 'first');
     this.menu.open('first');
   }
@@ -181,6 +222,17 @@ export class InicioPage implements OnInit {
   await alerta.present()
   localStorage.setItem('primera','false')
   }
+  async verAlertaError(){
+    const alerta=await this.alertacontroller.create({
+      header:'¡Contraseña incorrecta!',
+      subHeader:'Su contraseña no coicide',
+      buttons:['Aceptar']
+
+  })
+
+  await alerta.present()
+  localStorage.setItem('primera','false')
+  }
   editar(){
     let navigationExtras: NavigationExtras = {
       queryParams: {
@@ -190,53 +242,25 @@ export class InicioPage implements OnInit {
         })
       }
     };
+    localStorage.setItem('editar','true')
     this.router.navigate(['/login'], navigationExtras);
     
   }
 
+  cerrarSesion(){
+    localStorage.clear()
+    this.router.navigate(['/login'])
+    this.menu.close('first');
+  }
+
   async presentAlertPrompt() {
     const alert = await this.alertacontroller.create({
-      header: 'Prompt!',
+      header: 'Ingrese su contraseña antes de editar su usuario',
       inputs: [
         {
-          name: 'name1',
-          type: 'text',
-          placeholder: 'Placeholder 1'
-        },
-        {
-          name: 'name2',
-          type: 'text',
-          id: 'name2-id',
-          value: 'hello',
-          placeholder: 'Placeholder 2'
-        },
-        {
-          name: 'name3',
-          value: 'http://ionicframework.com',
-          type: 'url',
-          placeholder: 'Favorite site ever'
-        },
-        // input date with min & max
-        {
-          name: 'name4',
-          type: 'date',
-          min: '2017-03-01',
-          max: '2018-01-12'
-        },
-        // input date without min nor max
-        {
-          name: 'name5',
-          type: 'date'
-        },
-        {
-          name: 'name6',
-          type: 'number',
-          min: -5,
-          max: 10
-        },
-        {
-          name: 'name7',
-          type: 'number'
+          name: 'contraseña',
+          type: 'password',
+          placeholder: 'Contraseña'
         }
       ],
       buttons: [
@@ -249,8 +273,20 @@ export class InicioPage implements OnInit {
           }
         }, {
           text: 'Ok',
-          handler: () => {
+          handler: (cosa) => {
             console.log('Confirm Ok');
+            let item={
+              correo_electronico:this.repartidor.correo_electronico,
+              contraseña:cosa.contraseña
+            }
+            this.global.login(item).subscribe(response=>{
+              console.log(response);
+              localStorage.setItem('id',response[0].id)
+              this.editar()//////////////////////////
+            },error=>{
+              console.log("error");
+              this.verAlertaError()
+            })
           }
         }
       ]
