@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { GlobalElementService } from 'src/app/global-element.service';
 import { AlertController } from '@ionic/angular';
 import { Socket } from 'ngx-socket-io';
+import { NotificacionesService } from 'src/app/notificaciones.service';
  
 declare var google;
 @Component({
@@ -46,6 +47,7 @@ export class DatosSolicitudPage implements OnInit {
 
   constructor(
     private geolocation: Geolocation,
+    private notificaciones: NotificacionesService,
     private nativeGeocoder: NativeGeocoder,
     private route: ActivatedRoute,
     private router: Router,
@@ -355,13 +357,17 @@ export class DatosSolicitudPage implements OnInit {
         this.global.cambiarStatusPedido(this.pedido.id,{status:"Entregando"}).subscribe(response=>{
           console.log("Cambiando status...");
           this.pedido.status = "Entregando"
+          this.notificaciones.emviarMensaje("El servico se esta entregando","Revise su status",'Lavanderia'+this.pedido.lavanderia_id)
+          this.notificaciones.emviarMensaje("Su servico se esta entregando","Revise su status",'user'+this.pedido.usuario_id)
           this.sockets()
         });
       } else{
         this.global.cambiarStatusPedido(this.pedido.id,{status:"Recogiendo"}).subscribe(response=>{
           console.log("Cambiando status...");
           console.log("lavanderia",""+this.pedido.lavanderia_id);
-          console.log("usuario",""+this.pedido.lavanderia_id);
+          console.log("usuario",""+this.pedido.usuario_id);
+          this.notificaciones.emviarMensaje("El servico se esta recogiendo","Revise su status",'Lavanderia'+this.pedido.lavanderia_id)
+          this.notificaciones.emviarMensaje("Su servico se esta recogiendo","Revise su status",'user'+this.pedido.usuario_id)
           this.pedido.status = "Recogiendo"
           this.sockets()
         });

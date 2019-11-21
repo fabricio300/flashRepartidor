@@ -337,7 +337,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
 
-    if(localStorage.getItem('secion')== 'true' && localStorage.getItem('editar')==='false'){
+    if(localStorage.getItem('secion')== 'true' || localStorage.getItem('editar')==='false'){
       console.log("SE INICIA SESION");
       this.iniciar()
     }

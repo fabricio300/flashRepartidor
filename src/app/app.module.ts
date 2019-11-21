@@ -16,6 +16,8 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { ModalPage } from './paginas/login/login.page';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FCM } from '@ionic-native/fcm/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 
 const config: SocketIoConfig = { url: 'http://165.227.60.169', options: {} };
  
@@ -37,6 +39,8 @@ const config: SocketIoConfig = { url: 'http://165.227.60.169', options: {} };
     Geolocation,
     NativeGeocoder, 
     GoogleMaps,
+    FCM,
+    LocalNotifications,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

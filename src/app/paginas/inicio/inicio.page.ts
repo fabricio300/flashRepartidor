@@ -4,6 +4,7 @@ import { GlobalElementService } from 'src/app/global-element.service';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation/ngx';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
+import { NotificacionesService } from 'src/app/notificaciones.service';
 
 @Component({
   selector: 'app-inicio',
@@ -32,6 +33,7 @@ export class InicioPage implements OnInit {
     private router: Router,
     private socket: Socket,
     private route: ActivatedRoute,
+    private notificaciones: NotificacionesService
   ) { 
     this.inicio=[]
     console.log("repartidor",localStorage.getItem('id'));
@@ -60,7 +62,9 @@ export class InicioPage implements OnInit {
     });
   }
   ngOnInit() {
+    this.notificaciones.suscrivirceAtema()
     this.inicio=[]
+    
     console.log("limpio");
             
     this.global.getUsuarioEspecifico(localStorage.getItem('id')).subscribe(response=>{
@@ -249,6 +253,7 @@ export class InicioPage implements OnInit {
 
   cerrarSesion(){
     localStorage.clear()
+    this.notificaciones.desuscribir()
     this.router.navigate(['/login'])
     this.menu.close('first');
   }

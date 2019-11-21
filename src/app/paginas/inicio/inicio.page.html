@@ -103,7 +103,7 @@
          
       
       </label>
-      <button class="bton" (click)="irApedido(cosa)"></button>
+      <button [disabled]="cosa.status==Finalizado" class="bton" (click)="irApedido(cosa)"></button>
     </div>
 
 
