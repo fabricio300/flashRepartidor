@@ -283,8 +283,10 @@ export class InicioPage implements OnInit {
               console.log(response);
               localStorage.setItem('id',response[0].id)
               this.editar()//////////////////////////
+              localStorage.setItem('editar','true')
             },error=>{
               console.log("error");
+              localStorage.setItem('editar','false')
               this.verAlertaError()
             })
           }

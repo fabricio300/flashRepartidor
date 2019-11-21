@@ -327,19 +327,30 @@ export class LoginPage implements OnInit {
     });
   }
   ionViewWillEnter() {
-    this.actualRegitrar=0;
+    /*this.actualRegitrar=0;
     if(localStorage.getItem('secion')== null) {
       this.verPart('part1')
       this.ocultarPart('part4')
       this.actualRegitrar=0;
+    }*/
+    if(localStorage.getItem('editar')=='true'){
+      localStorage.setItem('editar','false')
+      this.verPart('part4')
+      this.ocultarPart('part1')
+    }
+
+    if(localStorage.getItem('secion')!='true'){
+      this.verPart('part1')
+      this.ocultarPart('part4')
     }
   }
 
   ngOnInit() {
-
-    if(localStorage.getItem('secion')== 'true' && localStorage.getItem('editar')==='false'){
+    console.log("SSESION" ,localStorage.getItem('secion'));
+    console.log("editar" ,localStorage.getItem('editar'));
+    if(localStorage.getItem('secion')=='true' && localStorage.getItem('editar')!='true'){
       console.log("SE INICIA SESION");
-      this.iniciar()
+          this.iniciar()
     }
     if(localStorage.getItem('editar')==='false'){
       //this.cosa()
