@@ -22,6 +22,7 @@ export class DatosSolicitudPage implements OnInit {
   latUsuario:any;
   lonUsuario:any;
   pedido: any;
+  mandar: any;
   mostrarPesajeVal = 0;
   mostrarRutaVal = 0;
   mostartDatosVal = 0;
@@ -55,16 +56,12 @@ export class DatosSolicitudPage implements OnInit {
     private alertacontroller: AlertController,
     private socket: Socket
     ) {
-      socket.on('repartidor_nuevo_pedido'+localStorage.getItem('id'),(data)=>{
-        console.log("Ejecuta",data);
-        
-        this.router.navigate(['/inicio']);
-      })
-          socket.on('asignar_repartidor'+localStorage.getItem('id'),(data)=>{
-        console.log("Ejecuta",data);
-        
-        this.router.navigate(['/inicio']);
-      })
+        socket.on('asignar_repartidor'+localStorage.getItem('id'),(data)=>{
+          console.log("Ejecuta",data);
+          this.mandar=0;
+          this.mandarUbicacion();
+          this.router.navigate(['/inicio']);
+      });
       this.directionsService = new google.maps.DirectionsService();
       this.directionsDisplay = new google.maps.DirectionsRenderer();
       this.bounds = new google.maps.LatLngBounds();
@@ -361,7 +358,8 @@ export class DatosSolicitudPage implements OnInit {
           this.notificaciones.emviarMensaje("Su servico se esta entregando","Revise su status",'user'+this.pedido.usuario_id)
           this.sockets()
         });
-      } else{
+      }
+      if(this.pedido.status == 'Nuevo pedido'){
         this.global.cambiarStatusPedido(this.pedido.id,{status:"Recogiendo"}).subscribe(response=>{
           console.log("Cambiando status...");
           console.log("lavanderia",""+this.pedido.lavanderia_id);
@@ -372,11 +370,26 @@ export class DatosSolicitudPage implements OnInit {
           this.sockets()
         });
       }
-
+      //this.mandar = 1;
+      //this.mandarUbicacion()
       
 
 
   }
+
+  mandarUbicacion() {
+    
+    if(this.mandar == 1){
+          setTimeout(() => {
+      console.log("Mandando...");
+      this.socket.emit('enviar_coordenadas',this.pedido.usuario_id)
+      this.mandarUbicacion();
+  }, 5000);
+    }
+
+
+  }
+
   sockets(){
     this.socket.emit('nuevo_status',"id_lavanderia"+this.pedido.lavanderia_id)
     this.socket.emit('nuevo_status',"id_user"+this.pedido.usuario_id)
@@ -587,6 +600,13 @@ console.log("Datos datosPlanchado", this.datosPlanchado);
   }
   cancelarReparto() {
     console.log("Cancelando...");
+    this.global.cambiarStatusLavanderia(this.pedido.id,{repartidor_id:null,status:'Nuevo pedido'}).subscribe(response=>{
+      console.log("Se cancelo");
+      this.notificaciones.emviarMensaje("El repartidor ha negado el pedido","Reasigne a otro repartidor",'Lavanderia'+this.pedido.lavanderia_id)
+      this.socket.emit('rechaso_de_pedido',this.pedido.lavanderia_id)
+      setTimeout(() => this.router.navigate(['/inicio']), 3000); 
+    })
+    
     
   }
 }

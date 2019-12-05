@@ -25,6 +25,23 @@ ion-refresher ion-refresher-content {
 refresher-icon-color {
     --color:#FFF!important;
 }
+.contet3{
+    display: none;
+    width: 93%;
+    min-height:120px;
+    padding: 5px;
+    text-decoration: none;
+    font-size: 12px;
+    background: #021685;
+    color: rgb(0, 0, 0);
+    border-radius: 10px;
+    margin: 10px;
+    overflow: hidden;
+    -webkit-box-shadow: 10px 10px 12px -6px rgba(0,0,0,0.75);
+-moz-box-shadow: 10px 10px 12px -6px rgba(0,0,0,0.75);
+box-shadow: 10px 10px 12px -6px rgba(0,0,0,0.75);
+    position: relative;
+}
 .contet2{
     width: 93%;
     min-height:120px;

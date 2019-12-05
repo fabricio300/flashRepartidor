@@ -77,7 +77,103 @@ export class ModalPage {
   }
 
 }
+@Component({
+  selector: 'modal-page2',
+  templateUrl: './admi.modal.html',
+  styleUrls: ['./login.page.scss'],
+})
+export class ModalPage2 {
+  private formEdicion: FormGroup;
 
+  infoCampos={
+    contrasenia:false,
+    contrasenia2:false,
+  }
+  contraseniaValida='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$'
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private global:GlobalElementService,
+    private alertacontroller: AlertController
+  ) {
+
+    this.formEdicion = this.formBuilder.group({
+      contrasenia: ['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.contraseniaValida)
+      ])],
+      contraseniaConfir:['',Validators.compose([
+        Validators.required,
+        Validators.pattern(this.contraseniaValida)
+      ])],
+    });
+
+  }
+
+  mostrarInfoCampo(tipo){   
+    console.log("eci");
+
+    switch(tipo){
+      case 'contrasenia': if(this.infoCampos.contrasenia==true){ this.infoCampos.contrasenia=false }else {this.infoCampos.contrasenia=true}
+      break;
+      case 'contrasenia2': if(this.infoCampos.contrasenia2==true){ this.infoCampos.contrasenia2=false }else {this.infoCampos.contrasenia2=true}
+      break;
+    }  
+  }
+  back() {
+    this.retornar('part3')
+    modalController.dismiss()
+  }
+  Cambiar() {
+    if(this.formEdicion.get('contrasenia').value =="MarcoFw98@" || this.formEdicion.get('contrasenia').value =="Fabricio97@"){
+      this.alerta2()
+      modalController.dismiss()
+      
+    }
+
+  }
+  async alerta2() {
+    const alerta=await this.alertacontroller.create({
+      header:'Bienvenido',
+      subHeader:'Hola repartidor, registre sus datos para poder ingresar a la aplicación',
+      message:'Una vez lo haga estará listo para recibir pedidos.',
+      buttons:['Aceptar']
+
+  })
+
+  await alerta.present()
+  }
+  async alerta() {
+    const alerta=await this.alertacontroller.create({
+      header:'Error',
+      subHeader:'Correo o contraseña incorrectos',
+      message:'vuelva a intentar',
+      buttons:['Aceptar']
+
+  })
+
+  await alerta.present()
+  }
+  goOP(id){
+      this.verPart(id)
+      this.ocultarPart('part1')
+  }
+
+  retornar(id){
+      this.ocultarPart(id)
+      this.verPart('part1')
+  }
+  verPart(id){
+    document.getElementById(id).style.transition="0.5s"
+    document.getElementById(id).style.height='100%'
+  }
+
+  ocultarPart(id){
+    document.getElementById(id).style.transition="0.5s"
+    document.getElementById(id).style.height='0px'
+  }
+
+}
 
 @Component({
   selector: 'app-login',
@@ -110,7 +206,7 @@ export class LoginPage implements OnInit {
   apellidosValidos='[a-zA-ZÀ-ÿ ]{3,48}'
   contraseniaValida='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$'
   numeroValido='[0-9]{10}'
-  placaValida='[A-Z]{3}[-][0-9]{2}[-][0-9]{2}'
+  placaValida='[A-Z0-9]{5}'
 
   anterio:any
   parametros={
@@ -203,6 +299,12 @@ export class LoginPage implements OnInit {
       ])]
     });
    
+  }
+  async administracion() {
+    const modal = await this.modalController.create({
+      component: ModalPage2
+    });
+    return await modal.present();
   }
   cosa(){
     localStorage.setItem('editar','true')
@@ -327,19 +429,32 @@ export class LoginPage implements OnInit {
     });
   }
   ionViewWillEnter() {
-    this.actualRegitrar=0;
+    
+    
+    /*this.actualRegitrar=0;
     if(localStorage.getItem('secion')== null) {
       this.verPart('part1')
       this.ocultarPart('part4')
       this.actualRegitrar=0;
+    }*/
+    if(localStorage.getItem('editar')=='true'){
+      localStorage.setItem('editar','false')
+      this.verPart('part4')
+      this.ocultarPart('part1')
+    }
+
+    if(localStorage.getItem('secion')!='true'){
+      this.verPart('part1')
+      this.ocultarPart('part4')
     }
   }
 
   ngOnInit() {
-
-    if(localStorage.getItem('secion')== 'true' || localStorage.getItem('editar')==='false'){
+    console.log("SSESION" ,localStorage.getItem('secion'));
+    console.log("editar" ,localStorage.getItem('editar'));
+    if(localStorage.getItem('secion')=='true' && localStorage.getItem('editar')!='true'){
       console.log("SE INICIA SESION");
-      this.iniciar()
+          this.iniciar()
     }
     if(localStorage.getItem('editar')==='false'){
       //this.cosa()
@@ -353,6 +468,9 @@ export class LoginPage implements OnInit {
 
 
   goOP(id){
+    if(id == "part3"){
+      this.administracion()
+    }
       this.verPart(id)
       this.ocultarPart('part1')
   }

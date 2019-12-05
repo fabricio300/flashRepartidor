@@ -345,7 +345,7 @@
           <label >
             <img src="../../../assets/imagenes/matricula.png" style="width: 12px;filter: invert(1);" >
             Matricula: </label>
-        <ion-input formControlName="matricula" type="text" placeholder="ABC-12-34"> </ion-input>
+        <ion-input formControlName="matricula" type="text" placeholder="FSV91"> </ion-input>
   
         <div class="infoVali" (click)="mostrarInfoCampo('matricula') ">
             <img *ngIf="!formRegistro.get('matricula').hasError('required') && !formRegistro.get('matricula').hasError('pattern')"
@@ -355,7 +355,7 @@
          </div>
   
         <p class="infoValidator" *ngIf="infoCampos.matricula">
-            Este campo es obligatorio, deba llenarse con tres letras en mayuscula, un guion, dos numeros,guion y otros dos numeros. 
+            Este campo es obligatorio, deba llenarse con cinco caracteres ya sean MAYUSCULAS o números. 
         </p>
   
   

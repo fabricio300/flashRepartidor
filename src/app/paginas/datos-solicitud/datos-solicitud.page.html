@@ -104,16 +104,13 @@
         <div>
 
 
-        <ion-button expand="block" (click)="aceptarEnvio()" *ngIf="botonEnvio==1">
+        <ion-button expand="block" (click)="aceptarEnvio()" *ngIf="this.pedido.status == 'Nuevo pedido'">
             Aceptar envio
         </ion-button>
-        <ion-button expand="block" (click)="mostrarRuta()" [disabled]="this.botonEnvio==1">
+        <ion-button expand="block" (click)="mostrarRuta()" [disabled]="this.pedido.status == 'Nuevo pedido'">
           Ver ruta de entrega
         </ion-button>
-        <ion-button expand="block" (click)="mostrarPesaje()" [disabled]="this.botonEnvio==1" *ngIf="this.pedido.precio==''">
-          Registrar pesaje
-    </ion-button> 
-        <ion-button expand="block" (click)="cancelarReparto()" *ngIf="botonEnvio==0">
+        <ion-button expand="block" (click)="cancelarReparto()" *ngIf="this.pedido.status == 'Nuevo pedido'">
           Cancelar reparto
       </ion-button>
 

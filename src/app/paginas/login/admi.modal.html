@@ -4,13 +4,29 @@
         <ion-buttons slot="start">
            <!-- <ion-back-button defaultHref="/inicio"></ion-back-button>-->
          </ion-buttons> 
-      <ion-title style="color: E3EAE6;">Cambiar contraseña</ion-title>
+      <ion-title style="color: E3EAE6;">ADMINISTRACIÓN</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-content color=secondary class="centrar">
     <div class="part " id="part4"> 
-        <br><br>
+        <br>
+        <div style="margin-left: 4%; text-align: initial; margin-right: 2%;">
+          <h3>Hola repartidor:<br>Para poder registrarte en nuestra aplicación es necesario conocerte y tener seguridad ed tu identidad.</h3>
+          <label>
+            Para ello necesitamos los siguientes documentos:<br>
+            &bull; CURP<br>
+            &bull; Identificación oficial (INE, pasaporte, etc)<br>
+            &bull; Tarjeta de circulación<br>
+            &bull; Licencia de conducir de motociclista<br>
+            <br>
+            Puedes ponerte en contacto con nosotros al numero:<br>
+            &bull; 9612413720<br>
+            Para agendar una cita y poderte darte tus herramientas de trabajo y orientación.<br><br>
+            Una vez tengamos tus datos, pide al administrador poner su codigo para poder registrarte en la aplicacion.<br>
+            FW.
+          </label>
+        </div>
         
             <form [formGroup]="formEdicion" class="formulario" style="height: auto; padding-top:15px; width: 85%;">
             
@@ -33,7 +49,7 @@
           
                   <label >
                       <img src="../../../assets/imagenes/lock.png" style="width: 12px;">
-                      Comfirma tu contraseña: </label>
+                      Confirmar: </label>
                   <ion-input formControlName="contraseniaConfir" type="password" placeholder="********"></ion-input>
           
                   <div class="infoVali" (click)="mostrarInfoCampo('contrasenia2')">

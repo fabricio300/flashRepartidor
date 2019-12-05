@@ -41,12 +41,12 @@ export class InicioPage implements OnInit {
     socket.on('repartidor_nuevo_pedido'+localStorage.getItem('id'),(data)=>{
       console.log("Ejecuta",data);
       
-      this.ngOnInit()
+      this.ionViewWillEnter()
     })
         socket.on('asignar_repartidor'+localStorage.getItem('id'),(data)=>{
       console.log("Ejecuta",data);
       
-      this.ngOnInit()
+      this.ionViewWillEnter()
     })
   }
   ionViewWillEnter() {
@@ -54,56 +54,63 @@ export class InicioPage implements OnInit {
     
     this.route.queryParams.subscribe(params => {
       if(params.special == 'atras'){
+        console.log("atras");        
         this.inicio=[]
         this.inicio1()
       }else{
+        this.inicio=[]
+    
+        console.log("limpio");
+                
+        this.global.getUsuarioEspecifico(localStorage.getItem('id')).subscribe(response=>{
+          this.repartidor = response
+          console.log("AQUI ESTA EL REPARTIDOR:", this.repartidor);
+          
+          this.estado(this.repartidor.status)
+        });
+        this.global.getPedidos(localStorage.getItem('id')).subscribe(response=>{
+          this.inicio=[]
+          console.log(response[0]);
+          let cosa:any = response
+          cosa.forEach(element => {
+            console.log(element)
+            if(element.status == 'Finalizado'){
+              console.log("FINALIZO");
+              
+            }else{
+              this.inicio.push({
+                coordenadas_lavanderia: JSON.parse(element.coordenadas_lavanderia),
+                coordenadas_repartidor: JSON.parse(element.coordenadas_repartidor),
+                coordenadas_usuario: JSON.parse(element.coordenadas_usuario),
+                datos_ropa: element.datos_ropa,
+                direccion_lavanderia: element.direccion_lavanderia,
+                direccion_usuario: element.direccion_usuario,
+                fecha_pedido: JSON.parse(element.fecha_pedido),
+                id: element.id,
+                indicaciones: element.indicaciones,
+                lavanderia_id: element.lavanderia_id,
+                precio: JSON.parse(element.precio),
+                repartidor_id: element.repartidor_id,
+                status: element.status,
+                usuario_id: element.usuario_id,
+                direcciones :element.direccion_usuario,
+                servicios:JSON.parse(element.servicios),
+                tipo_entrega:element.tipo_entrega
+              })
+              console.log("INICIO:",this.inicio)
+            }
 
+            
+          });
+          
+          this.pedidos = response;
+        })
       }
     });
   }
   ngOnInit() {
     this.notificaciones.suscrivirceAtema()
-    this.inicio=[]
-    
-    console.log("limpio");
-            
-    this.global.getUsuarioEspecifico(localStorage.getItem('id')).subscribe(response=>{
-      this.repartidor = response
-      console.log("AQUI ESTA EL REPARTIDOR:", this.repartidor);
-      
-      this.estado(this.repartidor.status)
-    });
-    this.global.getPedidos(localStorage.getItem('id')).subscribe(response=>{
-      this.inicio=[]
-      console.log(response[0]);
-      let cosa:any = response
-      cosa.forEach(element => {
-        console.log(element)
-        this.inicio.push({
-          coordenadas_lavanderia: JSON.parse(element.coordenadas_lavanderia),
-          coordenadas_repartidor: JSON.parse(element.coordenadas_repartidor),
-          coordenadas_usuario: JSON.parse(element.coordenadas_usuario),
-          datos_ropa: element.datos_ropa,
-          direccion_lavanderia: element.direccion_lavanderia,
-          direccion_usuario: element.direccion_usuario,
-          fecha_pedido: JSON.parse(element.fecha_pedido),
-          id: element.id,
-          indicaciones: element.indicaciones,
-          lavanderia_id: element.lavanderia_id,
-          precio: JSON.parse(element.precio),
-          repartidor_id: element.repartidor_id,
-          status: element.status,
-          usuario_id: element.usuario_id,
-          direcciones :element.direccion_usuario,
-          servicios:JSON.parse(element.servicios),
-          tipo_entrega:element.tipo_entrega
-        })
-        console.log("INICIO:",this.inicio)
-        
-      });
-      
-      this.pedidos = response;
-    })
+
     //this.time();
   }
   inicio1() {
@@ -111,31 +118,35 @@ export class InicioPage implements OnInit {
     this.global.getPedidos(localStorage.getItem('id')).subscribe(response=>{
       this.inicio=[]
       console.log(response[0]);
-      console.log("lksdufynaiweuyrviayuweorvaywervayuwoeriuvyabwoeiryaweiu");
-      
       let cosa:any = response
       cosa.forEach(element => {
         console.log(element)
-        this.inicio.push({
-          coordenadas_lavanderia: JSON.parse(element.coordenadas_lavanderia),
-          coordenadas_repartidor: JSON.parse(element.coordenadas_repartidor),
-          coordenadas_usuario: JSON.parse(element.coordenadas_usuario),
-          datos_ropa: element.datos_ropa,
-          direccion_lavanderia: element.direccion_lavanderia,
-          direccion_usuario: element.direccion_usuario,
-          fecha_pedido: JSON.parse(element.fecha_pedido),
-          id: element.id,
-          indicaciones: element.indicaciones,
-          lavanderia_id: element.lavanderia_id,
-          precio: JSON.parse(element.precio),
-          repartidor_id: element.repartidor_id,
-          status: element.status,
-          usuario_id: element.usuario_id,
-          direcciones :element.direccion_usuario,
-          servicios:JSON.parse(element.servicios),
-          tipo_entrega:element.tipo_entrega
-        })
-        console.log("INICIO:",this.inicio)
+        if(element.status == 'Finalizado'){
+          console.log("FINALIZO");
+          
+        }else{
+          this.inicio.push({
+            coordenadas_lavanderia: JSON.parse(element.coordenadas_lavanderia),
+            coordenadas_repartidor: JSON.parse(element.coordenadas_repartidor),
+            coordenadas_usuario: JSON.parse(element.coordenadas_usuario),
+            datos_ropa: element.datos_ropa,
+            direccion_lavanderia: element.direccion_lavanderia,
+            direccion_usuario: element.direccion_usuario,
+            fecha_pedido: JSON.parse(element.fecha_pedido),
+            id: element.id,
+            indicaciones: element.indicaciones,
+            lavanderia_id: element.lavanderia_id,
+            precio: JSON.parse(element.precio),
+            repartidor_id: element.repartidor_id,
+            status: element.status,
+            usuario_id: element.usuario_id,
+            direcciones :element.direccion_usuario,
+            servicios:JSON.parse(element.servicios),
+            tipo_entrega:element.tipo_entrega
+          })
+          console.log("INICIO:",this.inicio)
+        }
+
         
       });
       
@@ -188,7 +199,7 @@ export class InicioPage implements OnInit {
 
   doRefresh(event) {
     console.log('Begin async operation');
-    this.ngOnInit()
+    this.ionViewWillEnter()
     setTimeout(() => {
       console.log('Async operation has ended');
       event.target.complete();
@@ -288,8 +299,10 @@ export class InicioPage implements OnInit {
               console.log(response);
               localStorage.setItem('id',response[0].id)
               this.editar()//////////////////////////
+              localStorage.setItem('editar','true')
             },error=>{
               console.log("error");
+              localStorage.setItem('editar','false')
               this.verAlertaError()
             })
           }

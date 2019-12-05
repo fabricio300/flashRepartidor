@@ -14,17 +14,19 @@ import { HttpClientModule } from '@angular/common/http';
 import { GoogleMaps } from '@ionic-native/google-maps';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
-import { ModalPage } from './paginas/login/login.page';
+import { ModalPage, ModalPage2 } from './paginas/login/login.page';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FCM } from '@ionic-native/fcm/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 
 const config: SocketIoConfig = { url: 'http://165.227.60.169', options: {} };
  
 
 @NgModule({
-  declarations: [AppComponent,ModalPage],
-  entryComponents: [ModalPage],
+  declarations: [AppComponent,ModalPage,ModalPage2],
+  entryComponents: [ModalPage,ModalPage2],
   imports: 
   [
   SocketIoModule.forRoot(config),
@@ -37,6 +39,8 @@ const config: SocketIoConfig = { url: 'http://165.227.60.169', options: {} };
   providers: [
     StatusBar,
     Geolocation,
+    AndroidPermissions,
+    LocationAccuracy,
     NativeGeocoder, 
     GoogleMaps,
     FCM,

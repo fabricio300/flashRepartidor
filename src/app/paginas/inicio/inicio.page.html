@@ -54,7 +54,7 @@
 
 
 
-    <div [ngClass]="{'contet2':cosa.status === 'Repartidor en camino','contet1':cosa.status != 'Repartidor en camino'}" class="centrar" *ngFor="let cosa of inicio" >
+    <div  [ngClass]="{'contet2':cosa.status === 'Recogiendo','contet1':cosa.status === 'Nuevo pedido','contet3':cosa.status === 'En proceso'}" class="centrar" *ngFor="let cosa of inicio" >
 
       <div class="mitad centrar" >
           
@@ -103,7 +103,7 @@
          
       
       </label>
-      <button [disabled]="cosa.status==Finalizado" class="bton" (click)="irApedido(cosa)"></button>
+      <button class="bton" (click)="irApedido(cosa)"></button>
     </div>
 
 
