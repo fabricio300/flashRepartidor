@@ -7,7 +7,8 @@ const routes: Routes = [
   { path: 'login', loadChildren: './paginas/login/login.module#LoginPageModule' },
   { path: 'inicio', loadChildren: './paginas/inicio/inicio.module#InicioPageModule' },
   { path: 'datos-solicitud', loadChildren: './paginas/datos-solicitud/datos-solicitud.module#DatosSolicitudPageModule' },
-  { path: 'resetar', loadChildren: './paginas/resetar/resetar.module#ResetarPageModule' }
+  { path: 'resetar', loadChildren: './paginas/resetar/resetar.module#ResetarPageModule' },  { path: 'info-status', loadChildren: './paginas/info-status/info-status.module#InfoStatusPageModule' }
+
 
 ];
 

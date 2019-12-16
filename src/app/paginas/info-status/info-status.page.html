@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar color=primary>
+      <ion-buttons slot="start">
+          <ion-back-button ></ion-back-button>
+       </ion-buttons>  
+    <ion-title>Información general</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content >
+   
+<div class="contSupremo" style="background-color: #252525;">
+    <ion-header>
+        <ion-toolbar color=secondary>
+          <ion-title>
+              Staus de un pedido:
+          </ion-title>
+        </ion-toolbar>
+      </ion-header>
+  <div class="contenedorStatus" *ngFor="let sta of status"
+  
+  [ngClass]="{'nuevo':sta.status=='Nuevo pedido', 
+  'cancelado':sta.status=='Cancelado',
+  'lavanderia':sta.status=='En proceso',
+  'encalino1':sta.status=='Entregando',
+  'encalino2':sta.status=='A lavandería',
+  'recojer':sta.status=='Recogiendo',
+  'final':sta.status=='Finalizado',
+  'resperando':sta.status=='Lista y limpia'
+    }"
+  
+  >
+      <label class="centrarIz">
+        <img src="{{sta.icon}}" style="width: 30px; margin: 5px;" [ngClass]="{'rota-horizontal':sta.status=='A lavandería'}">
+        <p>{{sta.status}}</p>
+      </label>
+      <p id="{{sta.status}}" style="display: none;">
+        {{sta.info}}
+      </p>
+
+      <button class="boton" (click)="verInfo(sta)"></button>
+  </div>
+
+</div>
+
+
+</ion-content>

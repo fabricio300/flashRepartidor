@@ -479,6 +479,8 @@ export class DatosSolicitudPage implements OnInit {
       })
       this.global.cambiarData(this.pedido.id,{datos_ropa:datos_ropa}).subscribe(response=>{
         //------------------->EMIT
+        this.notificaciones.emviarMensaje("La ropa ha sido entregada al repartidor","Revise el status",'Lavanderia'+this.pedido.lavanderia_id)
+        this.notificaciones.emviarMensaje("su ropa ha sido recogida","Revise su status",'user'+this.pedido.usuario_id)
         this.sockets()
       })
       console.log("CAMBIO COSTO:",response);

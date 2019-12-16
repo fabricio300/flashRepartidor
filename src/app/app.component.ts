@@ -40,7 +40,10 @@ export class AppComponent {
   }
   time() {
       //console.log("Se cambio coordenadas!");
-      this.getGeolocation()    
+      if(localStorage.getItem('secion')=='true'){
+        this.getGeolocation();
+      }
+        
     setTimeout(() => {
       this.time();
   }, 5000);

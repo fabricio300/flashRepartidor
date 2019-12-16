@@ -20,7 +20,10 @@
     </ion-toolbar>
   </ion-header>
   <ion-content color=secondary>
- 
+    <ion-item color="secondary" [routerLink]="[('/info-status')]">
+      <img src="../../../assets/imagenes/information.png" style="width: 20px; margin: 3px;">
+      Información de la aplicación
+  </ion-item>
     <ion-item color=secondary (click)="presentAlertPrompt()">
       <img src="../../../assets/iconos/edit.png" width="20px" style="margin: 3px;">
       Editar información
@@ -54,7 +57,7 @@
 
 
 
-    <div  [ngClass]="{'contet2':cosa.status === 'Recogiendo','contet1':cosa.status === 'Nuevo pedido','contet3':cosa.status === 'En proceso'}" class="centrar" *ngFor="let cosa of inicio" >
+    <div  [ngClass]="{'contet2':cosa.status === 'Recogiendo','contet1':cosa.status === 'Nuevo pedido','contet3':cosa.status === 'En proceso','contet4':cosa.status === 'A lavandería','contet5':cosa.status === 'Entregando'}" class="centrar" *ngFor="let cosa of inicio" >
 
       <div class="mitad centrar" >
           

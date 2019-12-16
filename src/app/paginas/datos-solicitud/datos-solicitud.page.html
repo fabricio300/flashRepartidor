@@ -104,13 +104,13 @@
         <div>
 
 
-        <ion-button expand="block" (click)="aceptarEnvio()" *ngIf="this.pedido.status == 'Nuevo pedido'">
+        <ion-button expand="block" (click)="aceptarEnvio()" *ngIf="this.pedido.status == 'Nuevo pedido' || this.pedido.status == 'En proceso'">
             Aceptar envio
         </ion-button>
-        <ion-button expand="block" (click)="mostrarRuta()" [disabled]="this.pedido.status == 'Nuevo pedido'">
+        <ion-button expand="block" (click)="mostrarRuta()" [disabled]="this.pedido.status == 'Nuevo pedido' || this.pedido.status == 'En proceso'">
           Ver ruta de entrega
         </ion-button>
-        <ion-button expand="block" (click)="cancelarReparto()" *ngIf="this.pedido.status == 'Nuevo pedido'">
+        <ion-button expand="block" (click)="cancelarReparto()" *ngIf="this.pedido.status == 'Nuevo pedido' || this.pedido.status == 'En proceso'">
           Cancelar reparto
       </ion-button>
 

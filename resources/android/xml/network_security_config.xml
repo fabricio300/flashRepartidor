@@ -3,5 +3,6 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">localhost</domain>
         <domain  includeSubdomains="true">165.227.60.169</domain>
+        <domain  includeSubdomains="true">167.172.209.210</domain>
     </domain-config>
 </network-security-config>

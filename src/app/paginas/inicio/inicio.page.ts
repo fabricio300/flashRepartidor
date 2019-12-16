@@ -24,6 +24,7 @@ export class InicioPage implements OnInit {
 
   pedidos:any;
   inicio=[]
+  
 
   constructor(
     private menu: MenuController,
@@ -74,6 +75,10 @@ export class InicioPage implements OnInit {
           let cosa:any = response
           cosa.forEach(element => {
             console.log(element)
+            if(element.status == 'Cancelado'){
+              console.log("FINALIZO");
+            }else{
+              
             if(element.status == 'Finalizado'){
               console.log("FINALIZO");
               
@@ -99,7 +104,7 @@ export class InicioPage implements OnInit {
               })
               console.log("INICIO:",this.inicio)
             }
-
+            }
             
           });
           
@@ -121,6 +126,10 @@ export class InicioPage implements OnInit {
       let cosa:any = response
       cosa.forEach(element => {
         console.log(element)
+        if(element.status == 'Cancelado'){
+          console.log("FINALIZO");
+        }else{
+          
         if(element.status == 'Finalizado'){
           console.log("FINALIZO");
           
@@ -145,6 +154,7 @@ export class InicioPage implements OnInit {
             tipo_entrega:element.tipo_entrega
           })
           console.log("INICIO:",this.inicio)
+        }
         }
 
         

@@ -66,12 +66,12 @@ export class ModalPage {
   }
   async alerta() {
     const alerta=await this.alertacontroller.create({
-      header:'Error',
-      subHeader:'Correo o contraseña incorrectos',
-      message:'vuelva a intentar',
+      header:'Exito',
+      subHeader:'Se ha cambiado la contraseña con exito.',
       buttons:['Aceptar']
 
   })
+  
 
   await alerta.present()
   }
@@ -387,6 +387,11 @@ export class LoginPage implements OnInit {
       localStorage.setItem('primera','true')
       console.log(response);      
       localStorage.setItem('id',response.id)
+      this.actualRegitrar==1
+      console.log("REGISTRAR: ", this.actualRegitrar);
+      
+      this.imagenes=[]
+      this.retornar('part4')
       this.iniciar()
     })
 
@@ -429,7 +434,7 @@ export class LoginPage implements OnInit {
     });
   }
   ionViewWillEnter() {
-    
+    console.log("REGISTRAR: ", this.actualRegitrar);
     
     /*this.actualRegitrar=0;
     if(localStorage.getItem('secion')== null) {
@@ -608,6 +613,10 @@ export class LoginPage implements OnInit {
       console.log(response);      
       localStorage.setItem('id',response.id)
       this.iniciar()
+    },Error=>{
+      console.log("DUPLICADO");
+      
+      this.verAlertaGlobal('Intente con otro correo o compruebe su conexión a internet','Error correo registrado o un error de conexión','Error')
     })
 
   }
@@ -755,6 +764,18 @@ async presentAlertPrompt() {
   });
 
   await alert.present();
+}
+
+async verAlertaGlobal (mesaje,submensaje,titulo){
+  const alerta=await this.alertacontroller.create({
+    header:titulo,
+    subHeader:submensaje,
+    message:mesaje,
+    buttons:['Aceptar']
+
+})
+
+await alerta.present()
 }
 
 }
